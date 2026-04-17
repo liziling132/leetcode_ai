@@ -1,6 +1,9 @@
-HELP.md
+
 target/
-.mvn/wrapper/maven-wrapper.jar
+.m2/
+.tmp_rec*.txt
+.mvn/local-settings.xml
+
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -14,7 +17,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr

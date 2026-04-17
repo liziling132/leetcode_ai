@@ -10,7 +10,7 @@ public class User {
     private String username;
     private String passwordHash;
     private String nickname;
-    private String avatar;
+    private String avatarUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

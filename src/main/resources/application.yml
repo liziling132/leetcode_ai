@@ -17,3 +17,10 @@ mybatis:
 jwt:
   secret: 7f4be5d5d5c4462f9e32dc97f0e971d6
   expiration-seconds: 86400
+
+internal:
+  judge-callback-token: change_me_in_production
+
+judge:
+  queue:
+    poll-ms: 500

@@ -9,13 +9,13 @@
         <result property="username" column="username"/>
         <result property="passwordHash" column="password_hash"/>
         <result property="nickname" column="nickname"/>
-        <result property="avatar" column="avatar"/>
+        <result property="avatarUrl" column="avatar_url"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
     <select id="findByUsername" resultMap="userResultMap">
-        select id, username, password_hash, nickname, avatar, created_at, updated_at
+        select id, username, password_hash, nickname, avatar_url, created_at, updated_at
         from users
         where username = #{username}
         limit 1
@@ -23,8 +23,8 @@
 
     <insert id="insert" parameterType="com.leetcode.leetcode_ai.user.entity.User"
             useGeneratedKeys="true" keyProperty="id">
-        insert into users (username, password_hash, nickname, avatar, created_at, updated_at)
-        values (#{username}, #{passwordHash}, #{nickname}, #{avatar}, now(), now())
+        insert into users (username, password_hash, nickname, avatar_url, created_at, updated_at)
+        values (#{username}, #{passwordHash}, #{nickname}, #{avatarUrl}, now(), now())
     </insert>
 
 </mapper>

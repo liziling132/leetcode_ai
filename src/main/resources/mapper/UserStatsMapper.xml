@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.stats.mapper.UserStatsMapper">
+
+    <select id="countSubmissions" resultType="long">
+        select count(1)
+        from submissions
+        where user_id = #{userId}
+    </select>
+
+    <select id="countAcceptedSubmissions" resultType="long">
+        select count(1)
+        from submissions
+        where user_id = #{userId}
+          and judge_status = 'ACCEPTED'
+    </select>
+
+    <select id="submissionTrendLastDays" resultType="com.leetcode.leetcode_ai.stats.mapper.row.SubmissionTrendRow">
+        select date(submitted_at) as day,
+               count(1) as submissions
+        from submissions
+        where user_id = #{userId}
+          and submitted_at >= date_sub(curdate(), interval #{days} day)
+        group by date(submitted_at)
+        order by day asc
+    </select>
+
+    <select id="topWeakTags" resultType="com.leetcode.leetcode_ai.stats.mapper.row.WeakTagRow">
+        select t.tag_name as tagName,
+               sum(wq.wrong_count) as wrongCount
+        from wrong_questions wq
+                 join problem_tags pt on pt.problem_id = wq.problem_id
+                 join tags t on t.id = pt.tag_id
+        where wq.user_id = #{userId}
+        group by t.id, t.tag_name
+        order by wrongCount desc, t.id asc
+        limit #{limit}
+    </select>
+
+</mapper>

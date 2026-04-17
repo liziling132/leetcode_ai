@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.submission.mapper.SubmissionMapper">
+
+    <resultMap id="submissionResultMap" type="com.leetcode.leetcode_ai.submission.entity.Submission">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="problemId" column="problem_id"/>
+        <result property="language" column="language"/>
+        <result property="codeContent" column="code_content"/>
+        <result property="judgeStatus" column="judge_status"/>
+        <result property="compileLog" column="compile_log"/>
+        <result property="runTimeMs" column="run_time_ms"/>
+        <result property="memoryKb" column="memory_kb"/>
+        <result property="passedCaseCount" column="passed_case_count"/>
+        <result property="totalCaseCount" column="total_case_count"/>
+        <result property="judgeTraceId" column="judge_trace_id"/>
+        <result property="submittedAt" column="submitted_at"/>
+        <result property="judgedAt" column="judged_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.leetcode.leetcode_ai.submission.entity.Submission"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into submissions (user_id, problem_id, language, code_content, judge_status, submitted_at)
+        values (#{userId}, #{problemId}, #{language}, #{codeContent}, #{judgeStatus}, now())
+    </insert>
+
+    <select id="findById" resultMap="submissionResultMap">
+        select id, user_id, problem_id, language, code_content, judge_status, compile_log, run_time_ms, memory_kb,
+               passed_case_count, total_case_count, judge_trace_id, submitted_at, judged_at
+        from submissions
+        where id = #{id}
+        limit 1
+    </select>
+
+    <update id="markJudging">
+        update submissions
+        set judge_status = 'JUDGING'
+        where id = #{id}
+          and judge_status = 'PENDING'
+    </update>
+
+    <update id="updateJudgeResult">
+        update submissions
+        set judge_status = #{judgeStatus},
+            compile_log = #{compileLog},
+            run_time_ms = #{runTimeMs},
+            memory_kb = #{memoryKb},
+            passed_case_count = #{passedCaseCount},
+            total_case_count = #{totalCaseCount},
+            judge_trace_id = #{judgeTraceId},
+            judged_at = now()
+        where id = #{id}
+          and judge_status in ('PENDING', 'JUDGING')
+    </update>
+
+</mapper>
