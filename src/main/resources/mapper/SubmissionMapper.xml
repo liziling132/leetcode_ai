@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.submission.mapper.SubmissionMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.SubmissionMapper">
 
-    <resultMap id="submissionResultMap" type="com.leetcode.leetcode_ai.submission.entity.Submission">
+    <resultMap id="submissionResultMap" type="com.leetcode.leetcode_ai.entity.SubmissionEntity">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="problemId" column="problem_id"/>
@@ -21,7 +21,7 @@
         <result property="judgedAt" column="judged_at"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.leetcode.leetcode_ai.submission.entity.Submission"
+    <insert id="insert" parameterType="com.leetcode.leetcode_ai.entity.SubmissionEntity"
             useGeneratedKeys="true" keyProperty="id">
         insert into submissions (user_id, problem_id, language, code_content, judge_status, submitted_at)
         values (#{userId}, #{problemId}, #{language}, #{codeContent}, #{judgeStatus}, now())
@@ -55,5 +55,71 @@
         where id = #{id}
           and judge_status in ('PENDING', 'JUDGING')
     </update>
+
+    <sql id="queryCondition">
+        <where>
+            s.user_id = #{userId}
+            <if test="problemId != null">
+                and s.problem_id = #{problemId}
+            </if>
+            <if test="judgeStatus != null and judgeStatus != ''">
+                and s.judge_status = #{judgeStatus}
+            </if>
+            <if test="language != null and language != ''">
+                and lower(s.language) = lower(#{language})
+            </if>
+            <if test="submittedFrom != null">
+                and s.submitted_at &gt;= #{submittedFrom}
+            </if>
+            <if test="submittedTo != null">
+                and s.submitted_at &lt;= #{submittedTo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByUserAndCondition" resultType="long">
+        select count(1)
+        from submissions s
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="findPageByUserAndCondition" resultType="com.leetcode.leetcode_ai.vo.SubmissionListItemVo">
+        select s.id,
+               s.problem_id as problemId,
+               p.title as problemTitle,
+               s.language,
+               s.judge_status as judgeStatus,
+               s.run_time_ms as runTimeMs,
+               s.memory_kb as memoryKb,
+               s.passed_case_count as passedCaseCount,
+               s.total_case_count as totalCaseCount,
+               s.submitted_at as submittedAt,
+               s.judged_at as judgedAt
+        from submissions s
+                 join problems p on p.id = s.problem_id
+        <include refid="queryCondition"/>
+        order by s.submitted_at desc, s.id desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="countByUserAndProblem" resultType="long">
+        select count(1)
+        from submissions
+        where user_id = #{userId}
+          and problem_id = #{problemId}
+    </select>
+
+    <select id="findVersionPageByUserAndProblem" resultType="com.leetcode.leetcode_ai.vo.SubmissionVersionItemVo">
+        select id as submissionId,
+               language,
+               judge_status as judgeStatus,
+               code_content as codeContent,
+               submitted_at as submittedAt
+        from submissions
+        where user_id = #{userId}
+          and problem_id = #{problemId}
+        order by submitted_at desc, id desc
+        limit #{size} offset #{offset}
+    </select>
 
 </mapper>

@@ -3,6 +3,7 @@ target/
 .m2/
 .tmp_rec*.txt
 .mvn/local-settings.xml
+*.log
 
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -34,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+

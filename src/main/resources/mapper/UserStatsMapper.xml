@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.stats.mapper.UserStatsMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.UserStatsMapper">
 
     <select id="countSubmissions" resultType="long">
         select count(1)
@@ -17,7 +17,7 @@
           and judge_status = 'ACCEPTED'
     </select>
 
-    <select id="submissionTrendLastDays" resultType="com.leetcode.leetcode_ai.stats.mapper.row.SubmissionTrendRow">
+    <select id="submissionTrendLastDays" resultType="com.leetcode.leetcode_ai.mapper.row.SubmissionTrendRow">
         select date(submitted_at) as day,
                count(1) as submissions
         from submissions
@@ -27,7 +27,7 @@
         order by day asc
     </select>
 
-    <select id="topWeakTags" resultType="com.leetcode.leetcode_ai.stats.mapper.row.WeakTagRow">
+    <select id="topWeakTags" resultType="com.leetcode.leetcode_ai.mapper.row.WeakTagRow">
         select t.tag_name as tagName,
                sum(wq.wrong_count) as wrongCount
         from wrong_questions wq

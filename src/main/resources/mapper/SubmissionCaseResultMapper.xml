@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.SubmissionCaseResultMapper">
+
+    <resultMap id="submissionCaseResultMap" type="com.leetcode.leetcode_ai.entity.SubmissionCaseResultEntity">
+        <id property="id" column="id"/>
+        <result property="submissionId" column="submission_id"/>
+        <result property="testcaseId" column="testcase_id"/>
+        <result property="caseIndex" column="case_index"/>
+        <result property="judgeStatus" column="judge_status"/>
+        <result property="runTimeMs" column="run_time_ms"/>
+        <result property="memoryKb" column="memory_kb"/>
+        <result property="expectedOutput" column="expected_output"/>
+        <result property="actualOutput" column="actual_output"/>
+        <result property="errorMessage" column="error_message"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <delete id="deleteBySubmissionId">
+        delete from submission_case_results
+        where submission_id = #{submissionId}
+    </delete>
+
+    <insert id="insert" parameterType="com.leetcode.leetcode_ai.entity.SubmissionCaseResultEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into submission_case_results (
+            submission_id, testcase_id, case_index, judge_status, run_time_ms, memory_kb,
+            expected_output, actual_output, error_message, created_at
+        )
+        values (
+            #{submissionId}, #{testcaseId}, #{caseIndex}, #{judgeStatus}, #{runTimeMs}, #{memoryKb},
+            #{expectedOutput}, #{actualOutput}, #{errorMessage}, now()
+        )
+    </insert>
+
+    <select id="countBySubmissionId" resultType="long">
+        select count(1)
+        from submission_case_results
+        where submission_id = #{submissionId}
+        <if test="onlyFailed">
+            and judge_status &lt;&gt; 'ACCEPTED'
+        </if>
+    </select>
+
+    <select id="findPageBySubmissionId" resultMap="submissionCaseResultMap">
+        select id, submission_id, testcase_id, case_index, judge_status, run_time_ms, memory_kb,
+               expected_output, actual_output, error_message, created_at
+        from submission_case_results
+        where submission_id = #{submissionId}
+        <if test="onlyFailed">
+            and judge_status &lt;&gt; 'ACCEPTED'
+        </if>
+        order by case_index asc, id asc
+        limit #{size} offset #{offset}
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.AdminTagMapper">
+
+    <resultMap id="tagResultMap" type="com.leetcode.leetcode_ai.entity.TagEntity">
+        <id property="id" column="id"/>
+        <result property="tagName" column="tag_name"/>
+        <result property="tagType" column="tag_type"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <sql id="queryCondition">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and t.tag_name like concat('%', #{keyword}, '%')
+            </if>
+            <if test="tagType != null and tagType != ''">
+                and t.tag_type = #{tagType}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        select count(1)
+        from tags t
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="findPageByCondition" resultType="com.leetcode.leetcode_ai.vo.AdminTagItemVo">
+        select t.id,
+               t.tag_name as tagName,
+               t.tag_type as tagType,
+               count(pt.id) as problemCount,
+               t.created_at as createdAt
+        from tags t
+                 left join problem_tags pt on pt.tag_id = t.id
+        <include refid="queryCondition"/>
+        group by t.id, t.tag_name, t.tag_type, t.created_at
+        order by t.created_at desc, t.id desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="findById" resultMap="tagResultMap">
+        select id, tag_name, tag_type, created_at
+        from tags
+        where id = #{id}
+        limit 1
+    </select>
+
+    <select id="findByName" resultMap="tagResultMap">
+        select id, tag_name, tag_type, created_at
+        from tags
+        where tag_name = #{tagName}
+        limit 1
+    </select>
+
+    <insert id="insert">
+        insert into tags (tag_name, tag_type, created_at)
+        values (#{tagName}, #{tagType}, now())
+    </insert>
+
+    <update id="updateById">
+        update tags
+        set tag_name = #{tagName},
+            tag_type = #{tagType}
+        where id = #{id}
+    </update>
+
+    <select id="countProblemReferences" resultType="long">
+        select count(1)
+        from problem_tags
+        where tag_id = #{tagId}
+    </select>
+
+    <delete id="deleteProblemTagsByTagId">
+        delete from problem_tags
+        where tag_id = #{tagId}
+    </delete>
+
+    <delete id="deleteById">
+        delete from tags
+        where id = #{id}
+    </delete>
+
+</mapper>

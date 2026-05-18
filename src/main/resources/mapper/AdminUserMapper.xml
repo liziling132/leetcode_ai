@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.AdminUserMapper">
+
+    <sql id="queryCondition">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (u.username like concat('%', #{keyword}, '%') or u.nickname like concat('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        select count(1)
+        from users u
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="findPageByCondition" resultType="com.leetcode.leetcode_ai.vo.AdminUserItemVo">
+        select u.id,
+               u.username,
+               u.nickname,
+               u.email,
+               u.phone,
+               u.status,
+               u.created_at as createdAt,
+               count(s.id) as submissionCount,
+               sum(case when s.judge_status = 'ACCEPTED' then 1 else 0 end) as acceptedCount
+        from users u
+                 left join submissions s on s.user_id = u.id
+        <include refid="queryCondition"/>
+        group by u.id, u.username, u.nickname, u.email, u.phone, u.status, u.created_at
+        order by u.created_at desc, u.id desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <update id="updateStatus">
+        update users
+        set status = #{status},
+            updated_at = now()
+        where id = #{userId}
+    </update>
+
+</mapper>

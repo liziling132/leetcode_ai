@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.AdminProblemMapper">
+
+    <sql id="queryCondition">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%'))
+            </if>
+            <if test="difficulty != null and difficulty != ''">
+                and difficulty = #{difficulty}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="tagId != null">
+                and exists (
+                    select 1
+                    from problem_tags pt
+                    where pt.problem_id = problems.id
+                      and pt.tag_id = #{tagId}
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        select count(1)
+        from problems
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="findPageByCondition" resultType="com.leetcode.leetcode_ai.vo.AdminProblemListItemVo">
+        select id, title, difficulty, status, created_at as createdAt, updated_at as updatedAt
+        from problems
+        <include refid="queryCondition"/>
+        order by created_at desc, id desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <resultMap id="problemResultMap" type="com.leetcode.leetcode_ai.entity.ProblemEntity">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="inputDesc" column="input_desc"/>
+        <result property="outputDesc" column="output_desc"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="knowledgePoints" column="knowledge_points"/>
+        <result property="supportLanguages" column="support_languages"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findById" resultMap="problemResultMap">
+        select id, title, content, input_desc, output_desc, difficulty, knowledge_points, support_languages, status, created_at, updated_at
+        from problems
+        where id = #{id}
+        limit 1
+    </select>
+
+    <insert id="insertProblem" useGeneratedKeys="true" keyProperty="problem.id">
+        insert into problems (
+            title, slug, content, input_desc, output_desc, difficulty, knowledge_points, support_languages,
+            status, created_by, updated_by, created_at, updated_at
+        )
+        values (
+            #{problem.title}, null, #{problem.content}, #{problem.inputDesc}, #{problem.outputDesc}, #{problem.difficulty},
+            #{problem.knowledgePoints}, #{problem.supportLanguages}, #{problem.status}, #{createdBy}, #{updatedBy}, now(), now()
+        )
+    </insert>
+
+    <update id="updateProblem">
+        update problems
+        set title = #{problem.title},
+            content = #{problem.content},
+            input_desc = #{problem.inputDesc},
+            output_desc = #{problem.outputDesc},
+            difficulty = #{problem.difficulty},
+            knowledge_points = #{problem.knowledgePoints},
+            support_languages = #{problem.supportLanguages},
+            status = #{problem.status},
+            updated_by = #{updatedBy},
+            updated_at = now()
+        where id = #{problem.id}
+    </update>
+
+    <update id="softDelete">
+        update problems
+        set status = -1,
+            updated_by = #{updatedBy},
+            updated_at = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProblemTags">
+        delete from problem_tags
+        where problem_id = #{problemId}
+    </delete>
+
+    <insert id="insertProblemTag">
+        insert into problem_tags (problem_id, tag_id, created_at)
+        values (#{problemId}, #{tagId}, now())
+    </insert>
+
+    <select id="countTagsByIds" resultType="long">
+        select count(1)
+        from tags
+        where id in
+        <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
+            #{tagId}
+        </foreach>
+    </select>
+
+    <delete id="deleteTestcases">
+        delete from testcases
+        where problem_id = #{problemId}
+    </delete>
+
+    <insert id="insertTestcase">
+        insert into testcases (
+            problem_id, case_type, input_data, output_data, score, sort_order, is_active, created_at, updated_at
+        )
+        values (
+            #{problemId}, #{caseType}, #{inputData}, #{outputData}, #{score}, #{sortOrder}, #{isActive}, now(), now()
+        )
+    </insert>
+
+    <select id="findTagIdsByProblemId" resultType="long">
+        select tag_id
+        from problem_tags
+        where problem_id = #{problemId}
+        order by tag_id asc
+    </select>
+
+    <select id="findTagNamesByProblemId" resultType="string">
+        select t.tag_name
+        from problem_tags pt
+                 join tags t on t.id = pt.tag_id
+        where pt.problem_id = #{problemId}
+        order by t.id asc
+    </select>
+
+    <select id="findTestcasesByProblemId" resultType="com.leetcode.leetcode_ai.vo.AdminProblemTestcaseVo">
+        select id,
+               case_type as caseType,
+               input_data as inputData,
+               output_data as outputData,
+               score,
+               sort_order as sortOrder,
+               is_active as isActive
+        from testcases
+        where problem_id = #{problemId}
+        order by sort_order asc, id asc
+    </select>
+
+    <select id="findTagRowsByProblemIds" resultType="com.leetcode.leetcode_ai.mapper.row.ProblemTagRow">
+        select pt.problem_id as problemId,
+               t.tag_name as tagName
+        from problem_tags pt
+                 join tags t on t.id = pt.tag_id
+        where pt.problem_id in
+        <foreach collection="problemIds" item="problemId" open="(" separator="," close=")">
+            #{problemId}
+        </foreach>
+        order by pt.problem_id asc, t.id asc
+    </select>
+
+</mapper>

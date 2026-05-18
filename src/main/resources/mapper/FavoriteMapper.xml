@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.FavoriteMapper">
+
+    <insert id="insertIgnore">
+        insert ignore into favorites (user_id, problem_id, created_at)
+        values (#{userId}, #{problemId}, now())
+    </insert>
+
+    <delete id="deleteByUserAndProblem">
+        delete from favorites
+        where user_id = #{userId}
+          and problem_id = #{problemId}
+    </delete>
+
+    <select id="countByUserId" resultType="long">
+        select count(1)
+        from favorites
+        where user_id = #{userId}
+    </select>
+
+    <select id="findPageByUserId" resultType="com.leetcode.leetcode_ai.vo.FavoriteItemVo">
+        select f.problem_id as problemId,
+               p.title as problemTitle,
+               p.difficulty as difficulty,
+               p.support_languages as supportLanguagesJson,
+               f.created_at as favoritedAt
+        from favorites f
+                 join problems p on p.id = f.problem_id
+        where f.user_id = #{userId}
+        order by f.created_at desc, f.id desc
+        limit #{size} offset #{offset}
+    </select>
+
+</mapper>

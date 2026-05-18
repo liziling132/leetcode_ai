@@ -2,29 +2,33 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.user.mapper.UserMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.UserMapper">
 
-    <resultMap id="userResultMap" type="com.leetcode.leetcode_ai.user.entity.User">
+    <resultMap id="userResultMap" type="com.leetcode.leetcode_ai.entity.UserEntity">
         <id property="id" column="id"/>
         <result property="username" column="username"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
         <result property="passwordHash" column="password_hash"/>
         <result property="nickname" column="nickname"/>
         <result property="avatarUrl" column="avatar_url"/>
+        <result property="bio" column="bio"/>
+        <result property="status" column="status"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
     <select id="findByUsername" resultMap="userResultMap">
-        select id, username, password_hash, nickname, avatar_url, created_at, updated_at
+        select id, username, email, phone, password_hash, nickname, avatar_url, bio, status, created_at, updated_at
         from users
         where username = #{username}
         limit 1
     </select>
 
-    <insert id="insert" parameterType="com.leetcode.leetcode_ai.user.entity.User"
+    <insert id="insert" parameterType="com.leetcode.leetcode_ai.entity.UserEntity"
             useGeneratedKeys="true" keyProperty="id">
-        insert into users (username, password_hash, nickname, avatar_url, created_at, updated_at)
-        values (#{username}, #{passwordHash}, #{nickname}, #{avatarUrl}, now(), now())
+        insert into users (username, email, phone, password_hash, nickname, avatar_url, bio, status, created_at, updated_at)
+        values (#{username}, #{email}, #{phone}, #{passwordHash}, #{nickname}, #{avatarUrl}, #{bio}, #{status}, now(), now())
     </insert>
 
 </mapper>

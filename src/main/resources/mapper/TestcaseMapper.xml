@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.testcase.mapper.TestcaseMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.TestcaseMapper">
 
-    <resultMap id="testcaseResultMap" type="com.leetcode.leetcode_ai.testcase.entity.Testcase">
+    <resultMap id="testcaseResultMap" type="com.leetcode.leetcode_ai.entity.TestcaseEntity">
         <id property="id" column="id"/>
         <result property="problemId" column="problem_id"/>
         <result property="caseType" column="case_type"/>

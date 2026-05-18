@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.problem.mapper.ProblemMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.ProblemMapper">
 
-    <resultMap id="problemResultMap" type="com.leetcode.leetcode_ai.problem.entity.Problem">
+    <resultMap id="problemResultMap" type="com.leetcode.leetcode_ai.entity.ProblemEntity">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
@@ -39,6 +39,9 @@
                       and pt2.tag_id = #{tagId}
                 )
             </if>
+            <if test="language != null and language != ''">
+                and json_search(p.support_languages, 'one', #{language}) is not null
+            </if>
         </where>
     </sql>
 
@@ -57,7 +60,7 @@
         limit #{size} offset #{offset}
     </select>
 
-    <select id="findTagsByProblemIds" resultType="com.leetcode.leetcode_ai.problem.mapper.row.ProblemTagRow">
+    <select id="findTagsByProblemIds" resultType="com.leetcode.leetcode_ai.mapper.row.ProblemTagRow">
         select pt.problem_id as problemId, t.tag_name as tagName
         from problem_tags pt
                  join tags t on t.id = pt.tag_id

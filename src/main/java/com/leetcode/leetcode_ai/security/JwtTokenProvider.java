@@ -16,14 +16,23 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    public static final String PRINCIPAL_USER = "USER";
+    public static final String PRINCIPAL_ADMIN = "ADMIN";
+
     private final JwtProperties jwtProperties;
 
     public String createToken(Long userId, String username) {
+        return createToken(userId, username, PRINCIPAL_USER, "USER");
+    }
+
+    public String createToken(Long userId, String username, String principalType, String role) {
         Instant now = Instant.now();
         Instant expireAt = now.plusSeconds(jwtProperties.getExpirationSeconds());
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .claim("username", username)
+                .claim("principalType", principalType)
+                .claim("role", role)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expireAt))
                 .signWith(getSecretKey())

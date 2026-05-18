@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.AdminResourceMapper">
+
+    <resultMap id="resourceResultMap" type="com.leetcode.leetcode_ai.entity.AdminResourceEntity">
+        <id property="id" column="id"/>
+        <result property="resourceType" column="resource_type"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="knowledgePoints" column="knowledge_points"/>
+        <result property="status" column="status"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="queryCondition">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and title like concat('%', #{keyword}, '%')
+            </if>
+            <if test="resourceType != null and resourceType != ''">
+                and resource_type = #{resourceType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByCondition" resultType="long">
+        select count(1)
+        from admin_resources
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="findPageByCondition" resultMap="resourceResultMap">
+        select id, resource_type, title, url, knowledge_points, status, created_by, updated_by, created_at, updated_at
+        from admin_resources
+        <include refid="queryCondition"/>
+        order by created_at desc, id desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="findById" resultMap="resourceResultMap">
+        select id, resource_type, title, url, knowledge_points, status, created_by, updated_by, created_at, updated_at
+        from admin_resources
+        where id = #{id}
+        limit 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
+        insert into admin_resources (
+            resource_type, title, url, knowledge_points, status, created_by, updated_by, created_at, updated_at
+        )
+        values (
+            #{entity.resourceType}, #{entity.title}, #{entity.url}, #{entity.knowledgePoints}, #{entity.status},
+            #{entity.createdBy}, #{entity.updatedBy}, now(), now()
+        )
+    </insert>
+
+    <update id="updateById">
+        update admin_resources
+        set resource_type = #{entity.resourceType},
+            title = #{entity.title},
+            url = #{entity.url},
+            knowledge_points = #{entity.knowledgePoints},
+            status = #{entity.status},
+            updated_by = #{entity.updatedBy},
+            updated_at = now()
+        where id = #{entity.id}
+    </update>
+
+    <delete id="deleteById">
+        delete from admin_resources
+        where id = #{id}
+    </delete>
+
+</mapper>

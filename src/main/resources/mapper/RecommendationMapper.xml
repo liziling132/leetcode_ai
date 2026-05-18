@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leetcode.leetcode_ai.recommendation.mapper.RecommendationMapper">
+<mapper namespace="com.leetcode.leetcode_ai.mapper.RecommendationMapper">
 
-    <resultMap id="problemResultMap" type="com.leetcode.leetcode_ai.problem.entity.Problem">
+    <resultMap id="problemResultMap" type="com.leetcode.leetcode_ai.entity.ProblemEntity">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="difficulty" column="difficulty"/>
@@ -13,7 +13,7 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <select id="findWrongSeeds" resultType="com.leetcode.leetcode_ai.recommendation.mapper.row.WrongSeedRow">
+    <select id="findWrongSeeds" resultType="com.leetcode.leetcode_ai.mapper.row.WrongSeedRow">
         select wq.problem_id as problemId,
                p.difficulty as difficulty,
                wq.last_wrong_type as lastWrongType,
@@ -77,11 +77,38 @@
 
     <insert id="insertRecommendationRecord">
         insert into recommendation_records (
-            user_id, trigger_source, trigger_ref_id, resource_type, resource_id, problem_id, reason_text, score, recommended_at
+            user_id, trigger_source, trigger_ref_id, resource_type, resource_id, problem_id, reason_text, ai_source, ai_model, score, recommended_at
         )
         values (
-            #{userId}, #{triggerSource}, #{triggerRefId}, #{resourceType}, #{resourceId}, #{problemId}, #{reasonText}, #{score}, now()
+            #{userId}, #{triggerSource}, #{triggerRefId}, #{resourceType}, #{resourceId}, #{problemId}, #{reasonText}, #{aiSource}, #{aiModel}, #{score}, now()
         )
     </insert>
+
+    <select id="countRecordsByUserId" resultType="long">
+        select count(1)
+        from recommendation_records
+        where user_id = #{userId}
+    </select>
+
+    <select id="findRecordPageByUserId" resultType="com.leetcode.leetcode_ai.vo.RecommendationRecordItemVo">
+        select rr.id,
+               rr.trigger_source as triggerSource,
+               rr.trigger_ref_id as triggerRefId,
+               rr.resource_type as resourceType,
+               rr.resource_id as resourceId,
+               rr.problem_id as problemId,
+               p.title as problemTitle,
+               p.difficulty as difficulty,
+               rr.reason_text as reasonText,
+               rr.ai_source as aiSource,
+               rr.ai_model as aiModel,
+               rr.score,
+               rr.recommended_at as recommendedAt
+        from recommendation_records rr
+                 left join problems p on p.id = rr.problem_id
+        where rr.user_id = #{userId}
+        order by rr.recommended_at desc, rr.id desc
+        limit #{size} offset #{offset}
+    </select>
 
 </mapper>
