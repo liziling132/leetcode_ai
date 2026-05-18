@@ -6,7 +6,6 @@
       <el-table-column prop="problemTitle" label="题目" min-width="220" />
       <el-table-column prop="difficulty" label="难度" width="100" />
       <el-table-column prop="reasonText" label="推荐理由" min-width="280" />
-      <el-table-column prop="score" label="分数" width="100" />
       <el-table-column prop="recommendedAt" label="推荐时间" width="180" />
     </el-table>
 

@@ -13,7 +13,7 @@ public class UserProfileUpdateRequestDto {
     @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "username can only contain letters, numbers and underscore")
     private String username;
 
-    @Size(max = 500, message = "avatarUrl too long")
+    @Size(max = 3_000_000, message = "avatarUrl too long")
     private String avatarUrl;
 
     @Size(max = 500, message = "bio too long")

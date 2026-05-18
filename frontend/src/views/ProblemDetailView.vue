@@ -1,12 +1,37 @@
 ﻿<template>
   <el-row :gutter="12">
     <el-col :span="14">
-      <el-card>
-        <h3>{{ detail?.title }}</h3>
-        <p><b>难度:</b> {{ detail?.difficulty }}</p>
-        <p style="white-space: pre-wrap">{{ detail?.content }}</p>
+      <el-card class="problem-card">
+        <div class="problem-head">
+          <h2>{{ detail?.title || '-' }}</h2>
+          <el-tag>{{ detail?.difficulty || '-' }}</el-tag>
+        </div>
+
+        <section class="block">
+          <h4>题目描述</h4>
+          <p class="block-text">{{ detail?.content || '暂无描述' }}</p>
+        </section>
+
+        <section class="block">
+          <h4>输入说明</h4>
+          <p class="block-text">{{ detail?.inputDesc || '暂无输入说明' }}</p>
+        </section>
+
+        <section class="block">
+          <h4>输出说明</h4>
+          <p class="block-text">{{ detail?.outputDesc || '暂无输出说明' }}</p>
+        </section>
+
+        <section class="block" v-if="examples.length">
+          <h4>示例</h4>
+          <div v-for="(ex, idx) in examples" :key="idx" class="example-box">
+            <div class="example-title">示例 {{ idx + 1 }}</div>
+            <pre>{{ ex }}</pre>
+          </div>
+        </section>
       </el-card>
     </el-col>
+
     <el-col :span="10">
       <el-card>
         <el-form>
@@ -28,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api'
 
@@ -56,11 +81,21 @@ const zh = (status: string) => {
   return m[status] || status
 }
 
-const load = async () => { detail.value = await api.problemDetail(id) }
+const examples = computed(() => {
+  const txt = `${detail.value?.inputDesc || ''}\n${detail.value?.outputDesc || ''}`
+  const rows = txt.split('\n').map((s: string) => s.trim()).filter(Boolean)
+  return rows.filter((s: string) => s.includes('示例') || s.includes('example') || s.includes('nums=') || s.includes('target='))
+})
+
+const load = async () => {
+  detail.value = await api.problemDetail(id)
+}
+
 const run = async () => {
   const r: any = await api.runTest({ problemId: id, language: lang.value, codeContent: code.value, customInput: '' })
   result.value = `状态: ${zh(r.status)}\n耗时(ms): ${r.timeMs ?? '-'}\n输出:\n${r.output ?? ''}\n错误:\n${r.errorMessage ?? ''}`
 }
+
 const submit = async () => {
   const r: any = await api.createSubmission({ problemId: id, language: lang.value, codeContent: code.value, source: 'submit' })
   result.value = `提交成功\n提交ID: ${r.submissionId}\n状态: ${zh(r.status)}`
@@ -69,3 +104,64 @@ const submit = async () => {
 
 onMounted(load)
 </script>
+
+<style scoped>
+.problem-card {
+  border-radius: 12px;
+}
+
+.problem-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.problem-head h2 {
+  margin: 0;
+  font-size: 30px;
+  color: #1d2d55;
+}
+
+.block {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #e6ebf5;
+  border-radius: 10px;
+  background: #fbfdff;
+}
+
+.block h4 {
+  margin: 0 0 8px 0;
+  color: #233b72;
+}
+
+.block-text {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  color: #2d3f64;
+}
+
+.example-box {
+  border-radius: 8px;
+  border: 1px solid #e9edf6;
+  background: #fff;
+  margin-top: 8px;
+}
+
+.example-title {
+  font-size: 13px;
+  color: #5e6f8f;
+  border-bottom: 1px dashed #e8edf6;
+  padding: 8px 10px;
+}
+
+.example-box pre {
+  margin: 0;
+  padding: 10px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #2d3f64;
+}
+</style>

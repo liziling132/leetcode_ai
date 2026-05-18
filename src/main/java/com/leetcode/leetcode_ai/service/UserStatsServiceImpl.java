@@ -8,7 +8,6 @@ import com.leetcode.leetcode_ai.vo.WeakPointItemVo;
 import com.leetcode.leetcode_ai.vo.WeakPointsResponseVo;
 import com.leetcode.leetcode_ai.vo.LearningAdviceVo;
 import com.leetcode.leetcode_ai.mapper.UserStatsMapper;
-import com.leetcode.leetcode_ai.mapper.RecommendationMapper;
 import com.leetcode.leetcode_ai.mapper.row.SubmissionTrendRow;
 import com.leetcode.leetcode_ai.mapper.row.WeakTagRow;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +35,6 @@ public class UserStatsServiceImpl implements UserStatsService {
 
     private final UserStatsMapper userStatsMapper;
     private final AiTextService aiTextService;
-    private final RecommendationMapper recommendationMapper;
 
     @Override
     public UserStatsResponseVo userStats() {
@@ -108,18 +105,6 @@ public class UserStatsServiceImpl implements UserStatsService {
             model = null;
         }
 
-        recommendationMapper.insertRecommendationRecord(
-                userId,
-                "DAILY_PLAN",
-                null,
-                "ARTICLE",
-                "advice-" + System.currentTimeMillis(),
-                null,
-                advice,
-                source,
-                model,
-                BigDecimal.ZERO
-        );
         return new LearningAdviceVo(advice, source, model);
     }
 

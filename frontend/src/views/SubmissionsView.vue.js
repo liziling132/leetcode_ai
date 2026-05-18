@@ -1,6 +1,7 @@
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { api } from '@/api';
+import { useAuthStore } from '@/stores/auth';
 const list = ref([]);
 const aiText = ref('');
 const page = ref(1);
@@ -17,6 +18,8 @@ const caseSize = ref(10);
 const currentSubmissionId = ref(null);
 const versionVisible = ref(false);
 const versionList = ref([]);
+const auth = useAuthStore();
+const isAdmin = computed(() => auth.role === 'ADMIN');
 let timer = null;
 const statusText = (status) => ({
     PENDING: '待判题', JUDGING: '判题中', ACCEPTED: '通过', WRONG_ANSWER: '答案错误',
@@ -24,6 +27,7 @@ const statusText = (status) => ({
     MEMORY_LIMIT_EXCEEDED: '超内存', SYSTEM_ERROR: '系统错误'
 }[status] || status || '-');
 const statusTagType = (status) => status === 'ACCEPTED' ? 'success' : (status === 'PENDING' || status === 'JUDGING' ? 'warning' : 'info');
+const formatDateTime = (v) => v ? v.replace('T', ' ') : '-';
 const hasRunning = () => list.value.some((x) => x.judgeStatus === 'PENDING' || x.judgeStatus === 'JUDGING');
 const startPollingIfNeeded = () => {
     if (!hasRunning() || timer != null)
@@ -380,201 +384,382 @@ const __VLS_88 = __VLS_87({
     width: "780px",
 }, ...__VLS_functionalComponentArgsRest(__VLS_87));
 __VLS_89.slots.default;
-__VLS_asFunctionalElement(__VLS_intrinsicElements.pre, __VLS_intrinsicElements.pre)({});
-(JSON.stringify(__VLS_ctx.detail, null, 2));
-var __VLS_89;
-const __VLS_90 = {}.ElDialog;
-/** @type {[typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, ]} */ ;
+const __VLS_90 = {}.ElDescriptions;
+/** @type {[typeof __VLS_components.ElDescriptions, typeof __VLS_components.elDescriptions, typeof __VLS_components.ElDescriptions, typeof __VLS_components.elDescriptions, ]} */ ;
 // @ts-ignore
 const __VLS_91 = __VLS_asFunctionalComponent(__VLS_90, new __VLS_90({
-    modelValue: (__VLS_ctx.caseVisible),
-    title: "测试点明细",
-    width: "900px",
+    column: (2),
+    border: true,
 }));
 const __VLS_92 = __VLS_91({
+    column: (2),
+    border: true,
+}, ...__VLS_functionalComponentArgsRest(__VLS_91));
+__VLS_93.slots.default;
+const __VLS_94 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_95 = __VLS_asFunctionalComponent(__VLS_94, new __VLS_94({
+    label: "提交ID",
+}));
+const __VLS_96 = __VLS_95({
+    label: "提交ID",
+}, ...__VLS_functionalComponentArgsRest(__VLS_95));
+__VLS_97.slots.default;
+(__VLS_ctx.detail.id || '-');
+var __VLS_97;
+const __VLS_98 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_99 = __VLS_asFunctionalComponent(__VLS_98, new __VLS_98({
+    label: "题目ID",
+}));
+const __VLS_100 = __VLS_99({
+    label: "题目ID",
+}, ...__VLS_functionalComponentArgsRest(__VLS_99));
+__VLS_101.slots.default;
+(__VLS_ctx.detail.problemId || '-');
+var __VLS_101;
+const __VLS_102 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_103 = __VLS_asFunctionalComponent(__VLS_102, new __VLS_102({
+    label: "语言",
+}));
+const __VLS_104 = __VLS_103({
+    label: "语言",
+}, ...__VLS_functionalComponentArgsRest(__VLS_103));
+__VLS_105.slots.default;
+(__VLS_ctx.detail.language || '-');
+var __VLS_105;
+const __VLS_106 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_107 = __VLS_asFunctionalComponent(__VLS_106, new __VLS_106({
+    label: "状态",
+}));
+const __VLS_108 = __VLS_107({
+    label: "状态",
+}, ...__VLS_functionalComponentArgsRest(__VLS_107));
+__VLS_109.slots.default;
+const __VLS_110 = {}.ElTag;
+/** @type {[typeof __VLS_components.ElTag, typeof __VLS_components.elTag, typeof __VLS_components.ElTag, typeof __VLS_components.elTag, ]} */ ;
+// @ts-ignore
+const __VLS_111 = __VLS_asFunctionalComponent(__VLS_110, new __VLS_110({
+    type: (__VLS_ctx.statusTagType(__VLS_ctx.detail.judgeStatus)),
+}));
+const __VLS_112 = __VLS_111({
+    type: (__VLS_ctx.statusTagType(__VLS_ctx.detail.judgeStatus)),
+}, ...__VLS_functionalComponentArgsRest(__VLS_111));
+__VLS_113.slots.default;
+(__VLS_ctx.statusText(__VLS_ctx.detail.judgeStatus));
+var __VLS_113;
+var __VLS_109;
+const __VLS_114 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_115 = __VLS_asFunctionalComponent(__VLS_114, new __VLS_114({
+    label: "耗时(ms)",
+}));
+const __VLS_116 = __VLS_115({
+    label: "耗时(ms)",
+}, ...__VLS_functionalComponentArgsRest(__VLS_115));
+__VLS_117.slots.default;
+(__VLS_ctx.detail.runTimeMs ?? '-');
+var __VLS_117;
+const __VLS_118 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_119 = __VLS_asFunctionalComponent(__VLS_118, new __VLS_118({
+    label: "内存(KB)",
+}));
+const __VLS_120 = __VLS_119({
+    label: "内存(KB)",
+}, ...__VLS_functionalComponentArgsRest(__VLS_119));
+__VLS_121.slots.default;
+(__VLS_ctx.detail.memoryKb ?? '-');
+var __VLS_121;
+const __VLS_122 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_123 = __VLS_asFunctionalComponent(__VLS_122, new __VLS_122({
+    label: "通过用例",
+}));
+const __VLS_124 = __VLS_123({
+    label: "通过用例",
+}, ...__VLS_functionalComponentArgsRest(__VLS_123));
+__VLS_125.slots.default;
+(__VLS_ctx.detail.passedCaseCount ?? '-');
+var __VLS_125;
+const __VLS_126 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_127 = __VLS_asFunctionalComponent(__VLS_126, new __VLS_126({
+    label: "总用例",
+}));
+const __VLS_128 = __VLS_127({
+    label: "总用例",
+}, ...__VLS_functionalComponentArgsRest(__VLS_127));
+__VLS_129.slots.default;
+(__VLS_ctx.detail.totalCaseCount ?? '-');
+var __VLS_129;
+const __VLS_130 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_131 = __VLS_asFunctionalComponent(__VLS_130, new __VLS_130({
+    label: "提交时间",
+}));
+const __VLS_132 = __VLS_131({
+    label: "提交时间",
+}, ...__VLS_functionalComponentArgsRest(__VLS_131));
+__VLS_133.slots.default;
+(__VLS_ctx.formatDateTime(__VLS_ctx.detail.submittedAt));
+var __VLS_133;
+const __VLS_134 = {}.ElDescriptionsItem;
+/** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+// @ts-ignore
+const __VLS_135 = __VLS_asFunctionalComponent(__VLS_134, new __VLS_134({
+    label: "判题完成",
+}));
+const __VLS_136 = __VLS_135({
+    label: "判题完成",
+}, ...__VLS_functionalComponentArgsRest(__VLS_135));
+__VLS_137.slots.default;
+(__VLS_ctx.formatDateTime(__VLS_ctx.detail.judgedAt));
+var __VLS_137;
+if (__VLS_ctx.isAdmin) {
+    const __VLS_138 = {}.ElDescriptionsItem;
+    /** @type {[typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, typeof __VLS_components.ElDescriptionsItem, typeof __VLS_components.elDescriptionsItem, ]} */ ;
+    // @ts-ignore
+    const __VLS_139 = __VLS_asFunctionalComponent(__VLS_138, new __VLS_138({
+        label: "追踪ID",
+        span: (2),
+    }));
+    const __VLS_140 = __VLS_139({
+        label: "追踪ID",
+        span: (2),
+    }, ...__VLS_functionalComponentArgsRest(__VLS_139));
+    __VLS_141.slots.default;
+    (__VLS_ctx.detail.judgeTraceId || '-');
+    var __VLS_141;
+}
+var __VLS_93;
+if (__VLS_ctx.detail.compileLog) {
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ style: {} },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ style: {} },
+    });
+    const __VLS_142 = {}.ElInput;
+    /** @type {[typeof __VLS_components.ElInput, typeof __VLS_components.elInput, ]} */ ;
+    // @ts-ignore
+    const __VLS_143 = __VLS_asFunctionalComponent(__VLS_142, new __VLS_142({
+        modelValue: (__VLS_ctx.detail.compileLog),
+        type: "textarea",
+        rows: (8),
+        readonly: true,
+    }));
+    const __VLS_144 = __VLS_143({
+        modelValue: (__VLS_ctx.detail.compileLog),
+        type: "textarea",
+        rows: (8),
+        readonly: true,
+    }, ...__VLS_functionalComponentArgsRest(__VLS_143));
+}
+var __VLS_89;
+const __VLS_146 = {}.ElDialog;
+/** @type {[typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, ]} */ ;
+// @ts-ignore
+const __VLS_147 = __VLS_asFunctionalComponent(__VLS_146, new __VLS_146({
     modelValue: (__VLS_ctx.caseVisible),
     title: "测试点明细",
     width: "900px",
-}, ...__VLS_functionalComponentArgsRest(__VLS_91));
-__VLS_93.slots.default;
-const __VLS_94 = {}.ElTable;
+}));
+const __VLS_148 = __VLS_147({
+    modelValue: (__VLS_ctx.caseVisible),
+    title: "测试点明细",
+    width: "900px",
+}, ...__VLS_functionalComponentArgsRest(__VLS_147));
+__VLS_149.slots.default;
+const __VLS_150 = {}.ElTable;
 /** @type {[typeof __VLS_components.ElTable, typeof __VLS_components.elTable, typeof __VLS_components.ElTable, typeof __VLS_components.elTable, ]} */ ;
 // @ts-ignore
-const __VLS_95 = __VLS_asFunctionalComponent(__VLS_94, new __VLS_94({
+const __VLS_151 = __VLS_asFunctionalComponent(__VLS_150, new __VLS_150({
     data: (__VLS_ctx.caseList),
 }));
-const __VLS_96 = __VLS_95({
+const __VLS_152 = __VLS_151({
     data: (__VLS_ctx.caseList),
-}, ...__VLS_functionalComponentArgsRest(__VLS_95));
-__VLS_97.slots.default;
-const __VLS_98 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_151));
+__VLS_153.slots.default;
+const __VLS_154 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_99 = __VLS_asFunctionalComponent(__VLS_98, new __VLS_98({
+const __VLS_155 = __VLS_asFunctionalComponent(__VLS_154, new __VLS_154({
     prop: "caseIndex",
     label: "#",
     width: "70",
 }));
-const __VLS_100 = __VLS_99({
+const __VLS_156 = __VLS_155({
     prop: "caseIndex",
     label: "#",
     width: "70",
-}, ...__VLS_functionalComponentArgsRest(__VLS_99));
-const __VLS_102 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_155));
+const __VLS_158 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_103 = __VLS_asFunctionalComponent(__VLS_102, new __VLS_102({
+const __VLS_159 = __VLS_asFunctionalComponent(__VLS_158, new __VLS_158({
     prop: "judgeStatus",
     label: "状态",
     width: "140",
 }));
-const __VLS_104 = __VLS_103({
+const __VLS_160 = __VLS_159({
     prop: "judgeStatus",
     label: "状态",
     width: "140",
-}, ...__VLS_functionalComponentArgsRest(__VLS_103));
-const __VLS_106 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_159));
+const __VLS_162 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_107 = __VLS_asFunctionalComponent(__VLS_106, new __VLS_106({
+const __VLS_163 = __VLS_asFunctionalComponent(__VLS_162, new __VLS_162({
     prop: "expectedOutput",
     label: "期望输出",
 }));
-const __VLS_108 = __VLS_107({
+const __VLS_164 = __VLS_163({
     prop: "expectedOutput",
     label: "期望输出",
-}, ...__VLS_functionalComponentArgsRest(__VLS_107));
-const __VLS_110 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_163));
+const __VLS_166 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_111 = __VLS_asFunctionalComponent(__VLS_110, new __VLS_110({
+const __VLS_167 = __VLS_asFunctionalComponent(__VLS_166, new __VLS_166({
     prop: "actualOutput",
     label: "实际输出",
 }));
-const __VLS_112 = __VLS_111({
+const __VLS_168 = __VLS_167({
     prop: "actualOutput",
     label: "实际输出",
-}, ...__VLS_functionalComponentArgsRest(__VLS_111));
-var __VLS_97;
+}, ...__VLS_functionalComponentArgsRest(__VLS_167));
+var __VLS_153;
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ style: {} },
 });
-const __VLS_114 = {}.ElPagination;
+const __VLS_170 = {}.ElPagination;
 /** @type {[typeof __VLS_components.ElPagination, typeof __VLS_components.elPagination, ]} */ ;
 // @ts-ignore
-const __VLS_115 = __VLS_asFunctionalComponent(__VLS_114, new __VLS_114({
+const __VLS_171 = __VLS_asFunctionalComponent(__VLS_170, new __VLS_170({
     ...{ 'onCurrentChange': {} },
     currentPage: (__VLS_ctx.casePage),
     pageSize: (__VLS_ctx.caseSize),
     layout: "total, prev, pager, next",
     total: (__VLS_ctx.caseTotal),
 }));
-const __VLS_116 = __VLS_115({
+const __VLS_172 = __VLS_171({
     ...{ 'onCurrentChange': {} },
     currentPage: (__VLS_ctx.casePage),
     pageSize: (__VLS_ctx.caseSize),
     layout: "total, prev, pager, next",
     total: (__VLS_ctx.caseTotal),
-}, ...__VLS_functionalComponentArgsRest(__VLS_115));
-let __VLS_118;
-let __VLS_119;
-let __VLS_120;
-const __VLS_121 = {
+}, ...__VLS_functionalComponentArgsRest(__VLS_171));
+let __VLS_174;
+let __VLS_175;
+let __VLS_176;
+const __VLS_177 = {
     onCurrentChange: (__VLS_ctx.loadCases)
 };
-var __VLS_117;
-var __VLS_93;
-const __VLS_122 = {}.ElDialog;
+var __VLS_173;
+var __VLS_149;
+const __VLS_178 = {}.ElDialog;
 /** @type {[typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, typeof __VLS_components.ElDialog, typeof __VLS_components.elDialog, ]} */ ;
 // @ts-ignore
-const __VLS_123 = __VLS_asFunctionalComponent(__VLS_122, new __VLS_122({
+const __VLS_179 = __VLS_asFunctionalComponent(__VLS_178, new __VLS_178({
     modelValue: (__VLS_ctx.versionVisible),
     title: "历史版本",
     width: "900px",
 }));
-const __VLS_124 = __VLS_123({
+const __VLS_180 = __VLS_179({
     modelValue: (__VLS_ctx.versionVisible),
     title: "历史版本",
     width: "900px",
-}, ...__VLS_functionalComponentArgsRest(__VLS_123));
-__VLS_125.slots.default;
-const __VLS_126 = {}.ElTable;
+}, ...__VLS_functionalComponentArgsRest(__VLS_179));
+__VLS_181.slots.default;
+const __VLS_182 = {}.ElTable;
 /** @type {[typeof __VLS_components.ElTable, typeof __VLS_components.elTable, typeof __VLS_components.ElTable, typeof __VLS_components.elTable, ]} */ ;
 // @ts-ignore
-const __VLS_127 = __VLS_asFunctionalComponent(__VLS_126, new __VLS_126({
+const __VLS_183 = __VLS_asFunctionalComponent(__VLS_182, new __VLS_182({
     data: (__VLS_ctx.versionList),
 }));
-const __VLS_128 = __VLS_127({
+const __VLS_184 = __VLS_183({
     data: (__VLS_ctx.versionList),
-}, ...__VLS_functionalComponentArgsRest(__VLS_127));
-__VLS_129.slots.default;
-const __VLS_130 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_183));
+__VLS_185.slots.default;
+const __VLS_186 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_131 = __VLS_asFunctionalComponent(__VLS_130, new __VLS_130({
+const __VLS_187 = __VLS_asFunctionalComponent(__VLS_186, new __VLS_186({
     prop: "submissionId",
     label: "提交ID",
     width: "100",
 }));
-const __VLS_132 = __VLS_131({
+const __VLS_188 = __VLS_187({
     prop: "submissionId",
     label: "提交ID",
     width: "100",
-}, ...__VLS_functionalComponentArgsRest(__VLS_131));
-const __VLS_134 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_187));
+const __VLS_190 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_135 = __VLS_asFunctionalComponent(__VLS_134, new __VLS_134({
+const __VLS_191 = __VLS_asFunctionalComponent(__VLS_190, new __VLS_190({
     prop: "judgeStatus",
     label: "状态",
     width: "140",
 }));
-const __VLS_136 = __VLS_135({
+const __VLS_192 = __VLS_191({
     prop: "judgeStatus",
     label: "状态",
     width: "140",
-}, ...__VLS_functionalComponentArgsRest(__VLS_135));
-const __VLS_138 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_191));
+const __VLS_194 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_139 = __VLS_asFunctionalComponent(__VLS_138, new __VLS_138({
+const __VLS_195 = __VLS_asFunctionalComponent(__VLS_194, new __VLS_194({
     prop: "language",
     label: "语言",
     width: "90",
 }));
-const __VLS_140 = __VLS_139({
+const __VLS_196 = __VLS_195({
     prop: "language",
     label: "语言",
     width: "90",
-}, ...__VLS_functionalComponentArgsRest(__VLS_139));
-const __VLS_142 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_195));
+const __VLS_198 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_143 = __VLS_asFunctionalComponent(__VLS_142, new __VLS_142({
+const __VLS_199 = __VLS_asFunctionalComponent(__VLS_198, new __VLS_198({
     prop: "submittedAt",
     label: "提交时间",
     width: "180",
 }));
-const __VLS_144 = __VLS_143({
+const __VLS_200 = __VLS_199({
     prop: "submittedAt",
     label: "提交时间",
     width: "180",
-}, ...__VLS_functionalComponentArgsRest(__VLS_143));
-const __VLS_146 = {}.ElTableColumn;
+}, ...__VLS_functionalComponentArgsRest(__VLS_199));
+const __VLS_202 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
-const __VLS_147 = __VLS_asFunctionalComponent(__VLS_146, new __VLS_146({
+const __VLS_203 = __VLS_asFunctionalComponent(__VLS_202, new __VLS_202({
     prop: "codeContent",
     label: "代码",
     showOverflowTooltip: true,
 }));
-const __VLS_148 = __VLS_147({
+const __VLS_204 = __VLS_203({
     prop: "codeContent",
     label: "代码",
     showOverflowTooltip: true,
-}, ...__VLS_functionalComponentArgsRest(__VLS_147));
-var __VLS_129;
-var __VLS_125;
+}, ...__VLS_functionalComponentArgsRest(__VLS_203));
+var __VLS_185;
+var __VLS_181;
 var __VLS_3;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
@@ -595,8 +780,10 @@ const __VLS_self = (await import('vue')).defineComponent({
             caseSize: caseSize,
             versionVisible: versionVisible,
             versionList: versionList,
+            isAdmin: isAdmin,
             statusText: statusText,
             statusTagType: statusTagType,
+            formatDateTime: formatDateTime,
             load: load,
             onSizeChange: onSizeChange,
             showDetail: showDetail,

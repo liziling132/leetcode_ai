@@ -40,7 +40,28 @@
 
     <el-input v-model="aiText" type="textarea" :rows="8" style="margin-top: 12px" placeholder="点击“查看”显示 AI 代码解释（含错误分析）" />
 
-    <el-dialog v-model="detailVisible" title="提交详情" width="780px"><pre>{{ JSON.stringify(detail, null, 2) }}</pre></el-dialog>
+    <el-dialog v-model="detailVisible" title="提交详情" width="780px">
+      <el-descriptions :column="2" border>
+        <el-descriptions-item label="提交ID">{{ detail.id || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="题目ID">{{ detail.problemId || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="语言">{{ detail.language || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="statusTagType(detail.judgeStatus)">{{ statusText(detail.judgeStatus) }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="耗时(ms)">{{ detail.runTimeMs ?? '-' }}</el-descriptions-item>
+        <el-descriptions-item label="内存(KB)">{{ detail.memoryKb ?? '-' }}</el-descriptions-item>
+        <el-descriptions-item label="通过用例">{{ detail.passedCaseCount ?? '-' }}</el-descriptions-item>
+        <el-descriptions-item label="总用例">{{ detail.totalCaseCount ?? '-' }}</el-descriptions-item>
+        <el-descriptions-item label="提交时间">{{ formatDateTime(detail.submittedAt) }}</el-descriptions-item>
+        <el-descriptions-item label="判题完成">{{ formatDateTime(detail.judgedAt) }}</el-descriptions-item>
+        <el-descriptions-item v-if="isAdmin" label="追踪ID" :span="2">{{ detail.judgeTraceId || '-' }}</el-descriptions-item>
+      </el-descriptions>
+
+      <div v-if="detail.compileLog" style="margin-top: 12px">
+        <div style="font-weight: 600; margin-bottom: 6px;">编译日志</div>
+        <el-input :model-value="detail.compileLog" type="textarea" :rows="8" readonly />
+      </div>
+    </el-dialog>
 
     <el-dialog v-model="caseVisible" title="测试点明细" width="900px">
       <el-table :data="caseList">
@@ -67,9 +88,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { api } from '@/api'
+import { useAuthStore } from '@/stores/auth'
 
 const list = ref<any[]>([])
 const aiText = ref('')
@@ -90,6 +112,8 @@ const currentSubmissionId = ref<number | null>(null)
 
 const versionVisible = ref(false)
 const versionList = ref<any[]>([])
+const auth = useAuthStore()
+const isAdmin = computed(() => auth.role === 'ADMIN')
 
 let timer: number | null = null
 
@@ -100,6 +124,7 @@ const statusText = (status: string) => ({
 }[status] || status || '-')
 
 const statusTagType = (status: string) => status === 'ACCEPTED' ? 'success' : (status === 'PENDING' || status === 'JUDGING' ? 'warning' : 'info')
+const formatDateTime = (v: string) => v ? v.replace('T', ' ') : '-'
 
 const hasRunning = () => list.value.some((x) => x.judgeStatus === 'PENDING' || x.judgeStatus === 'JUDGING')
 const startPollingIfNeeded = () => {

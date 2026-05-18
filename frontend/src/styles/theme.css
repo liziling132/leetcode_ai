@@ -1,0 +1,79 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+:root {
+  --et-bg: #f5f8fc;
+  --et-surface: #ffffff;
+  --et-text: #1f2d4d;
+  --et-muted: #6f7e97;
+  --et-primary: #2563eb;
+  --et-primary-soft: #dce9ff;
+  --et-border: #e5ecf8;
+  --et-radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--et-bg);
+  color: var(--et-text);
+  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.el-main {
+  padding: 18px;
+}
+
+.el-card {
+  border: 1px solid var(--et-border);
+  border-radius: var(--et-radius);
+  box-shadow: 0 10px 26px rgba(20, 40, 90, 0.06);
+}
+
+.el-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.el-menu {
+  border-right: none !important;
+  background: transparent;
+}
+
+.el-menu-item,
+.el-sub-menu__title {
+  border-radius: 10px;
+  margin: 4px 6px;
+  color: #273a61;
+}
+
+.el-menu-item.is-active {
+  background: linear-gradient(90deg, #e6efff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.el-button--primary {
+  border: none;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.el-pagination {
+  margin-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .el-aside {
+    width: 210px !important;
+  }
+
+  .el-main {
+    padding: 12px;
+  }
+}

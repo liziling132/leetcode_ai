@@ -14,7 +14,8 @@ function parseRole(token) {
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         token: localStorage.getItem('token') || '',
-        role: localStorage.getItem('role') || 'USER'
+        role: localStorage.getItem('role') || 'USER',
+        avatarUrl: localStorage.getItem('avatarUrl') || ''
     }),
     actions: {
         setToken(token) {
@@ -26,8 +27,14 @@ export const useAuthStore = defineStore('auth', {
         logout() {
             this.token = '';
             this.role = 'USER';
+            this.avatarUrl = '';
             localStorage.removeItem('token');
             localStorage.removeItem('role');
+            localStorage.removeItem('avatarUrl');
+        },
+        setAvatarUrl(url) {
+            this.avatarUrl = url || '';
+            localStorage.setItem('avatarUrl', this.avatarUrl);
         }
     }
 });

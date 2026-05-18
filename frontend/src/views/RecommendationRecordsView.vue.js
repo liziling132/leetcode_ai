@@ -101,36 +101,23 @@ const __VLS_29 = {}.ElTableColumn;
 /** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
 const __VLS_30 = __VLS_asFunctionalComponent(__VLS_29, new __VLS_29({
-    prop: "score",
-    label: "分数",
-    width: "100",
+    prop: "recommendedAt",
+    label: "推荐时间",
+    width: "180",
 }));
 const __VLS_31 = __VLS_30({
-    prop: "score",
-    label: "分数",
-    width: "100",
+    prop: "recommendedAt",
+    label: "推荐时间",
+    width: "180",
 }, ...__VLS_functionalComponentArgsRest(__VLS_30));
-const __VLS_33 = {}.ElTableColumn;
-/** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
-// @ts-ignore
-const __VLS_34 = __VLS_asFunctionalComponent(__VLS_33, new __VLS_33({
-    prop: "recommendedAt",
-    label: "推荐时间",
-    width: "180",
-}));
-const __VLS_35 = __VLS_34({
-    prop: "recommendedAt",
-    label: "推荐时间",
-    width: "180",
-}, ...__VLS_functionalComponentArgsRest(__VLS_34));
 var __VLS_8;
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ style: {} },
 });
-const __VLS_37 = {}.ElPagination;
+const __VLS_33 = {}.ElPagination;
 /** @type {[typeof __VLS_components.ElPagination, typeof __VLS_components.elPagination, ]} */ ;
 // @ts-ignore
-const __VLS_38 = __VLS_asFunctionalComponent(__VLS_37, new __VLS_37({
+const __VLS_34 = __VLS_asFunctionalComponent(__VLS_33, new __VLS_33({
     ...{ 'onCurrentChange': {} },
     ...{ 'onSizeChange': {} },
     currentPage: (__VLS_ctx.page),
@@ -139,7 +126,7 @@ const __VLS_38 = __VLS_asFunctionalComponent(__VLS_37, new __VLS_37({
     pageSizes: ([10, 20, 50]),
     total: (__VLS_ctx.total),
 }));
-const __VLS_39 = __VLS_38({
+const __VLS_35 = __VLS_34({
     ...{ 'onCurrentChange': {} },
     ...{ 'onSizeChange': {} },
     currentPage: (__VLS_ctx.page),
@@ -147,17 +134,17 @@ const __VLS_39 = __VLS_38({
     layout: "total, sizes, prev, pager, next, jumper",
     pageSizes: ([10, 20, 50]),
     total: (__VLS_ctx.total),
-}, ...__VLS_functionalComponentArgsRest(__VLS_38));
-let __VLS_41;
-let __VLS_42;
-let __VLS_43;
-const __VLS_44 = {
+}, ...__VLS_functionalComponentArgsRest(__VLS_34));
+let __VLS_37;
+let __VLS_38;
+let __VLS_39;
+const __VLS_40 = {
     onCurrentChange: (__VLS_ctx.load)
 };
-const __VLS_45 = {
+const __VLS_41 = {
     onSizeChange: (__VLS_ctx.onSizeChange)
 };
-var __VLS_40;
+var __VLS_36;
 var __VLS_3;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
