@@ -1,7 +1,24 @@
 import { onMounted, ref } from 'vue';
 import { api } from '@/api';
 const list = ref([]);
-onMounted(async () => { const data = await api.wrongQuestions({ page: 1, size: 20 }); list.value = data.list || []; });
+const statusText = (status) => {
+    const m = {
+        PENDING: '待判题',
+        JUDGING: '判题中',
+        ACCEPTED: '通过',
+        WRONG_ANSWER: '答案错误',
+        COMPILE_ERROR: '编译错误',
+        RUNTIME_ERROR: '运行错误',
+        TIME_LIMIT_EXCEEDED: '超时',
+        MEMORY_LIMIT_EXCEEDED: '超内存',
+        SYSTEM_ERROR: '系统错误'
+    };
+    return m[status] || status || '-';
+};
+onMounted(async () => {
+    const data = await api.wrongQuestions({ page: 1, size: 20 });
+    list.value = data.list || [];
+});
 debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
@@ -61,18 +78,23 @@ const __VLS_19 = __VLS_18({
     width: "120",
 }, ...__VLS_functionalComponentArgsRest(__VLS_18));
 const __VLS_21 = {}.ElTableColumn;
-/** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
+/** @type {[typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, typeof __VLS_components.ElTableColumn, typeof __VLS_components.elTableColumn, ]} */ ;
 // @ts-ignore
 const __VLS_22 = __VLS_asFunctionalComponent(__VLS_21, new __VLS_21({
-    prop: "lastWrongType",
     label: "错误类型",
     width: "160",
 }));
 const __VLS_23 = __VLS_22({
-    prop: "lastWrongType",
     label: "错误类型",
     width: "160",
 }, ...__VLS_functionalComponentArgsRest(__VLS_22));
+__VLS_24.slots.default;
+{
+    const { default: __VLS_thisSlot } = __VLS_24.slots;
+    const [scope] = __VLS_getSlotParams(__VLS_thisSlot);
+    (__VLS_ctx.statusText(scope.row.lastWrongType));
+}
+var __VLS_24;
 var __VLS_8;
 var __VLS_3;
 var __VLS_dollars;
@@ -80,6 +102,7 @@ const __VLS_self = (await import('vue')).defineComponent({
     setup() {
         return {
             list: list,
+            statusText: statusText,
         };
     },
 });

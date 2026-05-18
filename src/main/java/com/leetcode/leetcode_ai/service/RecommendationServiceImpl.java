@@ -10,6 +10,7 @@ import com.leetcode.leetcode_ai.mapper.RecommendationMapper;
 import com.leetcode.leetcode_ai.mapper.row.WrongSeedRow;
 import com.leetcode.leetcode_ai.security.JwtUserPrincipal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,14 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RecommendationServiceImpl implements RecommendationService {
 
     private static final int MAX_SIZE = 20;
     private static final int DEFAULT_SEED_LIMIT = 5;
     private static final int MAX_PAGE_SIZE = 100;
+    private static final int MAX_RECORDS_PER_USER = 30;
 
     private final RecommendationMapper recommendationMapper;
     private final AiTextService aiTextService;
@@ -126,6 +129,11 @@ public class RecommendationServiceImpl implements RecommendationService {
             item.setReason(reasonPayload.reasonText());
             item.setScore(score.doubleValue());
             result.add(item);
+        }
+        try {
+            recommendationMapper.pruneUserRecordsKeepLatest(userId, MAX_RECORDS_PER_USER);
+        } catch (Exception e) {
+            log.warn("Failed to prune recommendation records, userId={}", userId, e);
         }
         return result;
     }

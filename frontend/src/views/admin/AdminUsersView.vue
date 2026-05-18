@@ -1,15 +1,16 @@
-<template>
+﻿<template>
   <el-card>
     <el-form inline>
-      <el-form-item label="关键字"><el-input v-model="keyword" /></el-form-item>
+      <el-form-item label="关键字"><el-input v-model="keyword" clearable /></el-form-item>
       <el-form-item label="状态">
         <el-select v-model="status" clearable style="width: 120px">
           <el-option label="启用" :value="1" />
           <el-option label="禁用" :value="0" />
         </el-select>
       </el-form-item>
-      <el-button type="primary" @click="load">查询</el-button>
+      <el-button type="primary" @click="onSearch">查询</el-button>
     </el-form>
+
     <el-table :data="list">
       <el-table-column prop="id" label="ID" width="90" />
       <el-table-column prop="username" label="用户名" />
@@ -22,22 +23,33 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
+      <el-pagination v-model:current-page="page" v-model:page-size="size" layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 50]" :total="total" @current-change="load" @size-change="onSizeChange" />
+    </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { api } from '@/api'
 
 const keyword = ref('')
 const status = ref<number | undefined>()
 const list = ref<any[]>([])
+const page = ref(1)
+const size = ref(20)
+const total = ref(0)
 
 const load = async () => {
-  const data: any = await api.adminUsers({ page: 1, size: 20, keyword: keyword.value || undefined, status: status.value })
+  const data: any = await api.adminUsers({ page: page.value, size: size.value, keyword: keyword.value || undefined, status: status.value })
   list.value = data.list || []
+  total.value = data.total || 0
 }
+
+const onSearch = async () => { page.value = 1; await load() }
+const onSizeChange = async () => { page.value = 1; await load() }
 
 const changeStatus = async (id: number, v: number) => {
   await api.adminUpdateUserStatus(id, v)
@@ -45,5 +57,5 @@ const changeStatus = async (id: number, v: number) => {
   await load()
 }
 
-load()
+onMounted(load)
 </script>

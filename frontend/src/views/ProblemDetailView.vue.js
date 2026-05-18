@@ -8,11 +8,29 @@ const detail = ref(null);
 const lang = ref('java');
 const code = ref('public class Solution { public static void main(String[] args){} }');
 const result = ref('');
+const zh = (status) => {
+    const m = {
+        PENDING: '待判题',
+        JUDGING: '判题中',
+        ACCEPTED: '通过',
+        WRONG_ANSWER: '答案错误',
+        COMPILE_ERROR: '编译错误',
+        RUNTIME_ERROR: '运行错误',
+        TIME_LIMIT_EXCEEDED: '超时',
+        MEMORY_LIMIT_EXCEEDED: '超内存',
+        SYSTEM_ERROR: '系统错误',
+        SUCCESS: '运行成功'
+    };
+    return m[status] || status;
+};
 const load = async () => { detail.value = await api.problemDetail(id); };
-const run = async () => { const r = await api.runTest({ problemId: id, language: lang.value, codeContent: code.value, customInput: '' }); result.value = JSON.stringify(r, null, 2); };
+const run = async () => {
+    const r = await api.runTest({ problemId: id, language: lang.value, codeContent: code.value, customInput: '' });
+    result.value = `状态: ${zh(r.status)}\n耗时(ms): ${r.timeMs ?? '-'}\n输出:\n${r.output ?? ''}\n错误:\n${r.errorMessage ?? ''}`;
+};
 const submit = async () => {
     const r = await api.createSubmission({ problemId: id, language: lang.value, codeContent: code.value, source: 'submit' });
-    result.value = JSON.stringify(r, null, 2);
+    result.value = `提交成功\n提交ID: ${r.submissionId}\n状态: ${zh(r.status)}`;
     router.push('/submissions');
 };
 onMounted(load);

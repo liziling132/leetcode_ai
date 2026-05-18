@@ -1,19 +1,25 @@
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { api } from '@/api';
 const keyword = ref('');
 const status = ref();
 const list = ref([]);
+const page = ref(1);
+const size = ref(20);
+const total = ref(0);
 const load = async () => {
-    const data = await api.adminUsers({ page: 1, size: 20, keyword: keyword.value || undefined, status: status.value });
+    const data = await api.adminUsers({ page: page.value, size: size.value, keyword: keyword.value || undefined, status: status.value });
     list.value = data.list || [];
+    total.value = data.total || 0;
 };
+const onSearch = async () => { page.value = 1; await load(); };
+const onSizeChange = async () => { page.value = 1; await load(); };
 const changeStatus = async (id, v) => {
     await api.adminUpdateUserStatus(id, v);
     ElMessage.success('更新成功');
     await load();
 };
-load();
+onMounted(load);
 debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
@@ -50,9 +56,11 @@ const __VLS_13 = {}.ElInput;
 // @ts-ignore
 const __VLS_14 = __VLS_asFunctionalComponent(__VLS_13, new __VLS_13({
     modelValue: (__VLS_ctx.keyword),
+    clearable: true,
 }));
 const __VLS_15 = __VLS_14({
     modelValue: (__VLS_ctx.keyword),
+    clearable: true,
 }, ...__VLS_functionalComponentArgsRest(__VLS_14));
 var __VLS_12;
 const __VLS_17 = {}.ElFormItem;
@@ -118,7 +126,7 @@ let __VLS_37;
 let __VLS_38;
 let __VLS_39;
 const __VLS_40 = {
-    onClick: (__VLS_ctx.load)
+    onClick: (__VLS_ctx.onSearch)
 };
 __VLS_36.slots.default;
 var __VLS_36;
@@ -243,6 +251,40 @@ __VLS_64.slots.default;
 }
 var __VLS_64;
 var __VLS_44;
+__VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+    ...{ style: {} },
+});
+const __VLS_81 = {}.ElPagination;
+/** @type {[typeof __VLS_components.ElPagination, typeof __VLS_components.elPagination, ]} */ ;
+// @ts-ignore
+const __VLS_82 = __VLS_asFunctionalComponent(__VLS_81, new __VLS_81({
+    ...{ 'onCurrentChange': {} },
+    ...{ 'onSizeChange': {} },
+    currentPage: (__VLS_ctx.page),
+    pageSize: (__VLS_ctx.size),
+    layout: "total, sizes, prev, pager, next, jumper",
+    pageSizes: ([10, 20, 50]),
+    total: (__VLS_ctx.total),
+}));
+const __VLS_83 = __VLS_82({
+    ...{ 'onCurrentChange': {} },
+    ...{ 'onSizeChange': {} },
+    currentPage: (__VLS_ctx.page),
+    pageSize: (__VLS_ctx.size),
+    layout: "total, sizes, prev, pager, next, jumper",
+    pageSizes: ([10, 20, 50]),
+    total: (__VLS_ctx.total),
+}, ...__VLS_functionalComponentArgsRest(__VLS_82));
+let __VLS_85;
+let __VLS_86;
+let __VLS_87;
+const __VLS_88 = {
+    onCurrentChange: (__VLS_ctx.load)
+};
+const __VLS_89 = {
+    onSizeChange: (__VLS_ctx.onSizeChange)
+};
+var __VLS_84;
 var __VLS_3;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
@@ -251,7 +293,12 @@ const __VLS_self = (await import('vue')).defineComponent({
             keyword: keyword,
             status: status,
             list: list,
+            page: page,
+            size: size,
+            total: total,
             load: load,
+            onSearch: onSearch,
+            onSizeChange: onSizeChange,
             changeStatus: changeStatus,
         };
     },

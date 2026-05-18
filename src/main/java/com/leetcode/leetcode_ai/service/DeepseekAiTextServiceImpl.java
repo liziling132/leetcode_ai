@@ -48,15 +48,25 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
     }
 
     @Override
-    public AiTextResult explainCode(String problemTitle, String language, String codeContent, String judgeStatus) {
-        String prompt = "你是算法代码讲解助手。请用中文输出4行：\n"
+    public AiTextResult explainCode(String problemTitle,
+                                    String language,
+                                    String codeContent,
+                                    String judgeStatus,
+                                    String compileLog,
+                                    String expectedOutput,
+                                    String actualOutput) {
+        String prompt = "你是算法代码讲解与纠错助手。请用中文输出5行：\n"
                 + "1) 解题思路：...\n"
                 + "2) 关键步骤：...\n"
                 + "3) 时间复杂度：...\n"
                 + "4) 空间复杂度：...\n"
+                + "5) 错误分析与修改建议：...\n"
                 + "题目: " + safeText(problemTitle) + "\n"
                 + "语言: " + safeText(language) + "\n"
                 + "判题状态: " + safeText(judgeStatus) + "\n"
+                + "编译信息: " + safeText(compileLog) + "\n"
+                + "期望输出: " + safeText(expectedOutput) + "\n"
+                + "实际输出: " + safeText(actualOutput) + "\n"
                 + "代码:\n" + safeText(codeContent);
         return chat("code-explain", prompt);
     }
@@ -78,12 +88,8 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
         int totalAttempts = Math.max(1, deepseekProperties.getRetryCount() + 1);
         for (int attempt = 1; attempt <= totalAttempts; attempt++) {
             AiTextResult result = doChat(scene, userPrompt, attempt, totalAttempts);
-            if (result != null) {
-                return result;
-            }
-            if (attempt < totalAttempts) {
-                sleepBriefly();
-            }
+            if (result != null) return result;
+            if (attempt < totalAttempts) sleepBriefly();
         }
         return null;
     }
@@ -106,29 +112,20 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
             ResponseEntity<String> response = restTemplate().postForEntity(url, request, String.class);
-            if (!response.getStatusCode().is2xxSuccessful() || !StringUtils.hasText(response.getBody())) {
-                return null;
-            }
+            if (!response.getStatusCode().is2xxSuccessful() || !StringUtils.hasText(response.getBody())) return null;
+
             JsonNode root = objectMapper.readTree(response.getBody());
             JsonNode contentNode = root.path("choices").path(0).path("message").path("content");
-            if (!contentNode.isTextual()) {
-                log.warn("DeepSeek response content missing, scene={}, attempt={}/{}", scene, attempt, totalAttempts);
-                return null;
-            }
-            String content = trimToLength(contentNode.asText(), 500);
-            if (!StringUtils.hasText(content)) {
-                log.warn("DeepSeek response empty content, scene={}, attempt={}/{}", scene, attempt, totalAttempts);
-                return null;
-            }
+            if (!contentNode.isTextual()) return null;
+            String content = trimToLength(contentNode.asText(), 700);
+            if (!StringUtils.hasText(content)) return null;
             String model = root.path("model").asText(deepseekProperties.getModel());
             return new AiTextResult(content, "AI", model);
         } catch (RestClientResponseException ex) {
-            log.warn("DeepSeek HTTP error, scene={}, attempt={}/{}, status={}, body={}",
-                    scene, attempt, totalAttempts, ex.getRawStatusCode(), trimToLength(ex.getResponseBodyAsString(), 400));
+            log.warn("DeepSeek HTTP error, scene={}, attempt={}/{}, status={}", scene, attempt, totalAttempts, ex.getRawStatusCode());
             return null;
         } catch (Exception ex) {
-            log.warn("DeepSeek request failed, scene={}, attempt={}/{}, message={}",
-                    scene, attempt, totalAttempts, ex.getMessage());
+            log.warn("DeepSeek request failed, scene={}, attempt={}/{}, message={}", scene, attempt, totalAttempts, ex.getMessage());
             return null;
         }
     }
@@ -141,32 +138,22 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
     }
 
     private String normalizeBaseUrl(String baseUrl) {
-        if (!StringUtils.hasText(baseUrl)) {
-            return "https://api.deepseek.com";
-        }
+        if (!StringUtils.hasText(baseUrl)) return "https://api.deepseek.com";
         String text = baseUrl.trim();
         return text.endsWith("/") ? text.substring(0, text.length() - 1) : text;
     }
 
     private String safeText(String text) {
-        if (!StringUtils.hasText(text)) {
-            return "无";
-        }
-        return trimToLength(text.trim(), 500);
+        if (!StringUtils.hasText(text)) return "无";
+        return trimToLength(text.trim(), 700);
     }
 
     private String trimToLength(String text, int maxLength) {
-        if (!StringUtils.hasText(text)) {
-            return text;
-        }
+        if (!StringUtils.hasText(text)) return text;
         return text.length() <= maxLength ? text : text.substring(0, maxLength);
     }
 
     private void sleepBriefly() {
-        try {
-            Thread.sleep(120L);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+        try { Thread.sleep(120L); } catch (InterruptedException ex) { Thread.currentThread().interrupt(); }
     }
 }

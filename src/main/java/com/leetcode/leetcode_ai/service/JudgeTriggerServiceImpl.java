@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -77,7 +78,14 @@ public class JudgeTriggerServiceImpl implements JudgeTriggerService {
             Files.writeString(sourceFile, SubmissionEntity.getCodeContent(), StandardCharsets.UTF_8);
 
             ExecResult compileResult = runProcess(
-                    List.of(javacBin(), sourceFile.getFileName().toString()),
+                    List.of(
+                            javacBin(),
+                            "-J-Duser.language=en",
+                            "-J-Duser.country=US",
+                            "-XDrawDiagnostics",
+                            "-encoding", "UTF-8",
+                            sourceFile.getFileName().toString()
+                    ),
                     workDir,
                     null,
                     COMPILE_TIMEOUT
@@ -212,7 +220,7 @@ public class JudgeTriggerServiceImpl implements JudgeTriggerService {
         }
         String output;
         try (InputStream is = process.getInputStream()) {
-            output = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            output = new String(is.readAllBytes(), Charset.defaultCharset());
         }
         return new ExecResult(false, process.exitValue(), output, (int) timeMs);
     }

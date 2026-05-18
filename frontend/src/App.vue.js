@@ -97,10 +97,10 @@ const __VLS_29 = {}.ElMenuItem;
 /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
 // @ts-ignore
 const __VLS_30 = __VLS_asFunctionalComponent(__VLS_29, new __VLS_29({
-    index: "/stats",
+    index: "/recommendation-records",
 }));
 const __VLS_31 = __VLS_30({
-    index: "/stats",
+    index: "/recommendation-records",
 }, ...__VLS_functionalComponentArgsRest(__VLS_30));
 __VLS_32.slots.default;
 var __VLS_32;
@@ -108,57 +108,57 @@ const __VLS_33 = {}.ElMenuItem;
 /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
 // @ts-ignore
 const __VLS_34 = __VLS_asFunctionalComponent(__VLS_33, new __VLS_33({
-    index: "/profile",
+    index: "/favorites",
 }));
 const __VLS_35 = __VLS_34({
-    index: "/profile",
+    index: "/favorites",
 }, ...__VLS_functionalComponentArgsRest(__VLS_34));
 __VLS_36.slots.default;
 var __VLS_36;
+const __VLS_37 = {}.ElMenuItem;
+/** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
+// @ts-ignore
+const __VLS_38 = __VLS_asFunctionalComponent(__VLS_37, new __VLS_37({
+    index: "/stats",
+}));
+const __VLS_39 = __VLS_38({
+    index: "/stats",
+}, ...__VLS_functionalComponentArgsRest(__VLS_38));
+__VLS_40.slots.default;
+var __VLS_40;
+const __VLS_41 = {}.ElMenuItem;
+/** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
+// @ts-ignore
+const __VLS_42 = __VLS_asFunctionalComponent(__VLS_41, new __VLS_41({
+    index: "/profile",
+}));
+const __VLS_43 = __VLS_42({
+    index: "/profile",
+}, ...__VLS_functionalComponentArgsRest(__VLS_42));
+__VLS_44.slots.default;
+var __VLS_44;
 if (__VLS_ctx.role === 'ADMIN') {
-    const __VLS_37 = {}.ElSubMenu;
+    const __VLS_45 = {}.ElSubMenu;
     /** @type {[typeof __VLS_components.ElSubMenu, typeof __VLS_components.elSubMenu, typeof __VLS_components.ElSubMenu, typeof __VLS_components.elSubMenu, ]} */ ;
     // @ts-ignore
-    const __VLS_38 = __VLS_asFunctionalComponent(__VLS_37, new __VLS_37({
-        index: "admin",
-    }));
-    const __VLS_39 = __VLS_38({
-        index: "admin",
-    }, ...__VLS_functionalComponentArgsRest(__VLS_38));
-    __VLS_40.slots.default;
-    {
-        const { title: __VLS_thisSlot } = __VLS_40.slots;
-    }
-    const __VLS_41 = {}.ElMenuItem;
-    /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
-    // @ts-ignore
-    const __VLS_42 = __VLS_asFunctionalComponent(__VLS_41, new __VLS_41({
-        index: "/admin/monitor",
-    }));
-    const __VLS_43 = __VLS_42({
-        index: "/admin/monitor",
-    }, ...__VLS_functionalComponentArgsRest(__VLS_42));
-    __VLS_44.slots.default;
-    var __VLS_44;
-    const __VLS_45 = {}.ElMenuItem;
-    /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
-    // @ts-ignore
     const __VLS_46 = __VLS_asFunctionalComponent(__VLS_45, new __VLS_45({
-        index: "/admin/users",
+        index: "admin",
     }));
     const __VLS_47 = __VLS_46({
-        index: "/admin/users",
+        index: "admin",
     }, ...__VLS_functionalComponentArgsRest(__VLS_46));
     __VLS_48.slots.default;
-    var __VLS_48;
+    {
+        const { title: __VLS_thisSlot } = __VLS_48.slots;
+    }
     const __VLS_49 = {}.ElMenuItem;
     /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
     // @ts-ignore
     const __VLS_50 = __VLS_asFunctionalComponent(__VLS_49, new __VLS_49({
-        index: "/admin/problems",
+        index: "/admin/monitor",
     }));
     const __VLS_51 = __VLS_50({
-        index: "/admin/problems",
+        index: "/admin/monitor",
     }, ...__VLS_functionalComponentArgsRest(__VLS_50));
     __VLS_52.slots.default;
     var __VLS_52;
@@ -166,10 +166,10 @@ if (__VLS_ctx.role === 'ADMIN') {
     /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
     // @ts-ignore
     const __VLS_54 = __VLS_asFunctionalComponent(__VLS_53, new __VLS_53({
-        index: "/admin/tags",
+        index: "/admin/users",
     }));
     const __VLS_55 = __VLS_54({
-        index: "/admin/tags",
+        index: "/admin/users",
     }, ...__VLS_functionalComponentArgsRest(__VLS_54));
     __VLS_56.slots.default;
     var __VLS_56;
@@ -177,109 +177,131 @@ if (__VLS_ctx.role === 'ADMIN') {
     /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
     // @ts-ignore
     const __VLS_58 = __VLS_asFunctionalComponent(__VLS_57, new __VLS_57({
-        index: "/admin/resources",
+        index: "/admin/problems",
     }));
     const __VLS_59 = __VLS_58({
-        index: "/admin/resources",
+        index: "/admin/problems",
     }, ...__VLS_functionalComponentArgsRest(__VLS_58));
     __VLS_60.slots.default;
     var __VLS_60;
-    var __VLS_40;
+    const __VLS_61 = {}.ElMenuItem;
+    /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
+    // @ts-ignore
+    const __VLS_62 = __VLS_asFunctionalComponent(__VLS_61, new __VLS_61({
+        index: "/admin/tags",
+    }));
+    const __VLS_63 = __VLS_62({
+        index: "/admin/tags",
+    }, ...__VLS_functionalComponentArgsRest(__VLS_62));
+    __VLS_64.slots.default;
+    var __VLS_64;
+    const __VLS_65 = {}.ElMenuItem;
+    /** @type {[typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, typeof __VLS_components.ElMenuItem, typeof __VLS_components.elMenuItem, ]} */ ;
+    // @ts-ignore
+    const __VLS_66 = __VLS_asFunctionalComponent(__VLS_65, new __VLS_65({
+        index: "/admin/resources",
+    }));
+    const __VLS_67 = __VLS_66({
+        index: "/admin/resources",
+    }, ...__VLS_functionalComponentArgsRest(__VLS_66));
+    __VLS_68.slots.default;
+    var __VLS_68;
+    var __VLS_48;
 }
 var __VLS_12;
 var __VLS_8;
-const __VLS_61 = {}.ElContainer;
+const __VLS_69 = {}.ElContainer;
 /** @type {[typeof __VLS_components.ElContainer, typeof __VLS_components.elContainer, typeof __VLS_components.ElContainer, typeof __VLS_components.elContainer, ]} */ ;
 // @ts-ignore
-const __VLS_62 = __VLS_asFunctionalComponent(__VLS_61, new __VLS_61({}));
-const __VLS_63 = __VLS_62({}, ...__VLS_functionalComponentArgsRest(__VLS_62));
-__VLS_64.slots.default;
-const __VLS_65 = {}.ElHeader;
+const __VLS_70 = __VLS_asFunctionalComponent(__VLS_69, new __VLS_69({}));
+const __VLS_71 = __VLS_70({}, ...__VLS_functionalComponentArgsRest(__VLS_70));
+__VLS_72.slots.default;
+const __VLS_73 = {}.ElHeader;
 /** @type {[typeof __VLS_components.ElHeader, typeof __VLS_components.elHeader, typeof __VLS_components.ElHeader, typeof __VLS_components.elHeader, ]} */ ;
 // @ts-ignore
-const __VLS_66 = __VLS_asFunctionalComponent(__VLS_65, new __VLS_65({
+const __VLS_74 = __VLS_asFunctionalComponent(__VLS_73, new __VLS_73({
     ...{ class: "header" },
 }));
-const __VLS_67 = __VLS_66({
+const __VLS_75 = __VLS_74({
     ...{ class: "header" },
-}, ...__VLS_functionalComponentArgsRest(__VLS_66));
-__VLS_68.slots.default;
+}, ...__VLS_functionalComponentArgsRest(__VLS_74));
+__VLS_76.slots.default;
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
 if (__VLS_ctx.token) {
-    const __VLS_69 = {}.ElTag;
+    const __VLS_77 = {}.ElTag;
     /** @type {[typeof __VLS_components.ElTag, typeof __VLS_components.elTag, typeof __VLS_components.ElTag, typeof __VLS_components.elTag, ]} */ ;
     // @ts-ignore
-    const __VLS_70 = __VLS_asFunctionalComponent(__VLS_69, new __VLS_69({
+    const __VLS_78 = __VLS_asFunctionalComponent(__VLS_77, new __VLS_77({
         type: (__VLS_ctx.role === 'ADMIN' ? 'danger' : 'info'),
         ...{ style: {} },
     }));
-    const __VLS_71 = __VLS_70({
+    const __VLS_79 = __VLS_78({
         type: (__VLS_ctx.role === 'ADMIN' ? 'danger' : 'info'),
         ...{ style: {} },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_70));
-    __VLS_72.slots.default;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_78));
+    __VLS_80.slots.default;
     (__VLS_ctx.role);
-    var __VLS_72;
+    var __VLS_80;
 }
 if (!__VLS_ctx.token) {
-    const __VLS_73 = {}.ElButton;
+    const __VLS_81 = {}.ElButton;
     /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
     // @ts-ignore
-    const __VLS_74 = __VLS_asFunctionalComponent(__VLS_73, new __VLS_73({
+    const __VLS_82 = __VLS_asFunctionalComponent(__VLS_81, new __VLS_81({
         ...{ 'onClick': {} },
         type: "primary",
     }));
-    const __VLS_75 = __VLS_74({
+    const __VLS_83 = __VLS_82({
         ...{ 'onClick': {} },
         type: "primary",
-    }, ...__VLS_functionalComponentArgsRest(__VLS_74));
-    let __VLS_77;
-    let __VLS_78;
-    let __VLS_79;
-    const __VLS_80 = {
+    }, ...__VLS_functionalComponentArgsRest(__VLS_82));
+    let __VLS_85;
+    let __VLS_86;
+    let __VLS_87;
+    const __VLS_88 = {
         onClick: (...[$event]) => {
             if (!(!__VLS_ctx.token))
                 return;
             __VLS_ctx.$router.push('/login');
         }
     };
-    __VLS_76.slots.default;
-    var __VLS_76;
-}
-else {
-    const __VLS_81 = {}.ElButton;
-    /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
-    // @ts-ignore
-    const __VLS_82 = __VLS_asFunctionalComponent(__VLS_81, new __VLS_81({
-        ...{ 'onClick': {} },
-    }));
-    const __VLS_83 = __VLS_82({
-        ...{ 'onClick': {} },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_82));
-    let __VLS_85;
-    let __VLS_86;
-    let __VLS_87;
-    const __VLS_88 = {
-        onClick: (__VLS_ctx.logout)
-    };
     __VLS_84.slots.default;
     var __VLS_84;
 }
-var __VLS_68;
-const __VLS_89 = {}.ElMain;
+else {
+    const __VLS_89 = {}.ElButton;
+    /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
+    // @ts-ignore
+    const __VLS_90 = __VLS_asFunctionalComponent(__VLS_89, new __VLS_89({
+        ...{ 'onClick': {} },
+    }));
+    const __VLS_91 = __VLS_90({
+        ...{ 'onClick': {} },
+    }, ...__VLS_functionalComponentArgsRest(__VLS_90));
+    let __VLS_93;
+    let __VLS_94;
+    let __VLS_95;
+    const __VLS_96 = {
+        onClick: (__VLS_ctx.logout)
+    };
+    __VLS_92.slots.default;
+    var __VLS_92;
+}
+var __VLS_76;
+const __VLS_97 = {}.ElMain;
 /** @type {[typeof __VLS_components.ElMain, typeof __VLS_components.elMain, typeof __VLS_components.ElMain, typeof __VLS_components.elMain, ]} */ ;
 // @ts-ignore
-const __VLS_90 = __VLS_asFunctionalComponent(__VLS_89, new __VLS_89({}));
-const __VLS_91 = __VLS_90({}, ...__VLS_functionalComponentArgsRest(__VLS_90));
-__VLS_92.slots.default;
-const __VLS_93 = {}.RouterView;
+const __VLS_98 = __VLS_asFunctionalComponent(__VLS_97, new __VLS_97({}));
+const __VLS_99 = __VLS_98({}, ...__VLS_functionalComponentArgsRest(__VLS_98));
+__VLS_100.slots.default;
+const __VLS_101 = {}.RouterView;
 /** @type {[typeof __VLS_components.RouterView, typeof __VLS_components.routerView, ]} */ ;
 // @ts-ignore
-const __VLS_94 = __VLS_asFunctionalComponent(__VLS_93, new __VLS_93({}));
-const __VLS_95 = __VLS_94({}, ...__VLS_functionalComponentArgsRest(__VLS_94));
-var __VLS_92;
-var __VLS_64;
+const __VLS_102 = __VLS_asFunctionalComponent(__VLS_101, new __VLS_101({}));
+const __VLS_103 = __VLS_102({}, ...__VLS_functionalComponentArgsRest(__VLS_102));
+var __VLS_100;
+var __VLS_72;
 var __VLS_3;
 /** @type {__VLS_StyleScopedClasses['layout']} */ ;
 /** @type {__VLS_StyleScopedClasses['sidebar']} */ ;

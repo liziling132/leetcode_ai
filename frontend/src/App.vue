@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <el-container class="layout">
     <el-aside width="240px" class="sidebar">
       <h2>易题通</h2>
@@ -7,6 +7,8 @@
         <el-menu-item index="/submissions">提交记录</el-menu-item>
         <el-menu-item index="/wrong-questions">错题本</el-menu-item>
         <el-menu-item index="/recommendations">推荐</el-menu-item>
+        <el-menu-item index="/recommendation-records">推荐记录</el-menu-item>
+        <el-menu-item index="/favorites">我的收藏</el-menu-item>
         <el-menu-item index="/stats">学习数据</el-menu-item>
         <el-menu-item index="/profile">个人中心</el-menu-item>
 

@@ -111,4 +111,17 @@
         limit #{size} offset #{offset}
     </select>
 
+    <delete id="pruneUserRecordsKeepLatest">
+        delete rr
+        from recommendation_records rr
+                 join (
+            select id
+            from recommendation_records
+            where user_id = #{userId}
+            order by recommended_at desc, id desc
+            limit 18446744073709551615 offset #{keep}
+        ) old on old.id = rr.id
+        where rr.user_id = #{userId}
+    </delete>
+
 </mapper>

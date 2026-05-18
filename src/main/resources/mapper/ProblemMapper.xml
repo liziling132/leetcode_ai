@@ -56,7 +56,7 @@
                p.support_languages, p.status, p.created_at, p.updated_at
         from problems p
         <include refid="queryCondition"/>
-        order by p.created_at desc, p.id desc
+        order by p.id asc
         limit #{size} offset #{offset}
     </select>
 

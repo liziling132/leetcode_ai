@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+﻿import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -10,6 +10,8 @@ const routes = [
   { path: '/submissions', component: () => import('@/views/SubmissionsView.vue') },
   { path: '/wrong-questions', component: () => import('@/views/WrongQuestionsView.vue') },
   { path: '/recommendations', component: () => import('@/views/RecommendationsView.vue') },
+  { path: '/recommendation-records', component: () => import('@/views/RecommendationRecordsView.vue') },
+  { path: '/favorites', component: () => import('@/views/FavoritesView.vue') },
   { path: '/stats', component: () => import('@/views/StatsView.vue') },
   { path: '/profile', component: () => import('@/views/ProfileView.vue') },
 

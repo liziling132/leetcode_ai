@@ -4,6 +4,8 @@ target/
 .tmp_rec*.txt
 .mvn/local-settings.xml
 *.log
+*.out
+*.err
 
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -36,3 +38,18 @@ build/
 ### VS Code ###
 .vscode/
 
+### Frontend (Vue/Vite) ###
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+frontend/.eslintcache
+frontend/coverage/
+frontend/*.local
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+### OS ###
+.DS_Store
+Thumbs.db

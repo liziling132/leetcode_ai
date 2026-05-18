@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -118,7 +119,14 @@ public class SubmissionServiceImpl implements SubmissionService {
             Files.writeString(sourceFile, request.getCodeContent(), StandardCharsets.UTF_8);
 
             ExecResult compileResult = runProcess(
-                    List.of(javacBin(), sourceFile.getFileName().toString()),
+                    List.of(
+                            javacBin(),
+                            "-J-Duser.language=en",
+                            "-J-Duser.country=US",
+                            "-XDrawDiagnostics",
+                            "-encoding", "UTF-8",
+                            sourceFile.getFileName().toString()
+                    ),
                     workDir,
                     null,
                     RUN_TEST_COMPILE_TIMEOUT
@@ -260,20 +268,34 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
         ProblemEntity problemEntity = problemMapper.findOnlineById(submissionEntity.getProblemId());
         String problemTitle = problemEntity == null ? "Unknown Problem" : problemEntity.getTitle();
+        String expectedOutput = null;
+        String actualOutput = null;
+        if (!"ACCEPTED".equals(submissionEntity.getJudgeStatus())) {
+            List<SubmissionCaseResultEntity> failed = submissionCaseResultMapper.findPageBySubmissionId(submissionId, true, 0, 1);
+            if (!failed.isEmpty()) {
+                expectedOutput = failed.get(0).getExpectedOutput();
+                actualOutput = failed.get(0).getActualOutput();
+            }
+        }
 
         AiTextResult aiResult = aiTextService.explainCode(
                 problemTitle,
                 submissionEntity.getLanguage(),
                 trimText(submissionEntity.getCodeContent(), 1200),
-                submissionEntity.getJudgeStatus()
+                submissionEntity.getJudgeStatus(),
+                submissionEntity.getCompileLog(),
+                expectedOutput,
+                actualOutput
         );
         if (aiResult != null && StringUtils.hasText(aiResult.content())) {
             return new AiCodeExplainVo(submissionId, aiResult.content(), aiResult.source(), aiResult.model());
-        }
-        String fallback = "解题思路：先明确输入输出并构造主流程。\n"
+        }        String fallback = "解题思路：先明确输入输出并构造主流程。\n"
                 + "关键步骤：按题意逐步处理数据，注意边界条件和空输入。\n"
                 + "时间复杂度：通常与主要循环层数相关，请结合代码循环结构评估。\n"
-                + "空间复杂度：主要来自额外数据结构与递归栈。";
+                + "空间复杂度：主要来自额外数据结构与递归栈。\n"
+                + "错误分析与修改建议：状态="
+                + (submissionEntity.getJudgeStatus() == null ? "UNKNOWN" : submissionEntity.getJudgeStatus())
+                + "，请优先检查编译日志，并对比失败测试点的期望输出与实际输出。";
         return new AiCodeExplainVo(submissionId, fallback, "RULE", null);
     }
 
@@ -349,7 +371,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         String output;
         try (InputStream is = process.getInputStream()) {
-            output = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            output = new String(is.readAllBytes(), Charset.defaultCharset());
         }
         return new ExecResult(false, process.exitValue(), output, (int) timeMs);
     }

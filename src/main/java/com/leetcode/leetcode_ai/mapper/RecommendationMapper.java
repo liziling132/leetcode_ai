@@ -41,4 +41,7 @@ public interface RecommendationMapper {
     List<RecommendationRecordItemVo> findRecordPageByUserId(@Param("userId") Long userId,
                                                             @Param("offset") int offset,
                                                             @Param("size") int size);
+
+    int pruneUserRecordsKeepLatest(@Param("userId") Long userId,
+                                   @Param("keep") int keep);
 }
