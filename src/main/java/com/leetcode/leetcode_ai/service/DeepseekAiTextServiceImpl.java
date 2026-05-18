@@ -28,7 +28,7 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
 
     @Override
     public AiTextResult summarizeWrongQuestion(String judgeStatus, String compileLog, String knowledgePoints) {
-        String prompt = "你是编程刷题助教。请用中文输出3句话，格式固定：\n"
+        String prompt = "你是编程刷题助教。请用中文输出3行：\n"
                 + "1) 可能原因：...\n"
                 + "2) 涉及知识点：...\n"
                 + "3) 修改建议：...\n"
@@ -40,11 +40,35 @@ public class DeepseekAiTextServiceImpl implements AiTextService {
 
     @Override
     public AiTextResult recommendReason(String wrongContext, String candidateTitle, String candidateDifficulty) {
-        String prompt = "你是编程刷题推荐助手。请用中文一句话说明为什么推荐该题，控制在40字内。\n"
+        String prompt = "你是编程刷题推荐助手。请用中文1句话说明为什么推荐该题，控制在50字内。\n"
                 + "用户错题上下文: " + safeText(wrongContext) + "\n"
                 + "候选题: " + safeText(candidateTitle) + "\n"
                 + "难度: " + safeText(candidateDifficulty);
         return chat("recommend-reason", prompt);
+    }
+
+    @Override
+    public AiTextResult explainCode(String problemTitle, String language, String codeContent, String judgeStatus) {
+        String prompt = "你是算法代码讲解助手。请用中文输出4行：\n"
+                + "1) 解题思路：...\n"
+                + "2) 关键步骤：...\n"
+                + "3) 时间复杂度：...\n"
+                + "4) 空间复杂度：...\n"
+                + "题目: " + safeText(problemTitle) + "\n"
+                + "语言: " + safeText(language) + "\n"
+                + "判题状态: " + safeText(judgeStatus) + "\n"
+                + "代码:\n" + safeText(codeContent);
+        return chat("code-explain", prompt);
+    }
+
+    @Override
+    public AiTextResult learningAdvice(String learningContext) {
+        String prompt = "你是学习规划助教。请给出中文3行学习建议：\n"
+                + "1) 当前主要问题：...\n"
+                + "2) 接下来3天练习重点：...\n"
+                + "3) 今日建议行动：...\n"
+                + "上下文: " + safeText(learningContext);
+        return chat("learning-advice", prompt);
     }
 
     private AiTextResult chat(String scene, String userPrompt) {

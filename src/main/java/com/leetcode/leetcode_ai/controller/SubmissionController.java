@@ -5,6 +5,7 @@ import com.leetcode.leetcode_ai.dto.CreateSubmissionRequestDto;
 import com.leetcode.leetcode_ai.dto.RunTestRequestDto;
 import com.leetcode.leetcode_ai.vo.CreateSubmissionResponseVo;
 import com.leetcode.leetcode_ai.vo.RunTestResponseVo;
+import com.leetcode.leetcode_ai.vo.AiCodeExplainVo;
 import com.leetcode.leetcode_ai.vo.SubmissionCaseResultItemVo;
 import com.leetcode.leetcode_ai.vo.SubmissionCaseResultPageVo;
 import com.leetcode.leetcode_ai.vo.SubmissionDetailResponseVo;
@@ -67,5 +68,10 @@ public class SubmissionController {
                                                                @RequestParam(defaultValue = "20") int size,
                                                                @RequestParam(defaultValue = "false") boolean onlyFailed) {
         return ApiResponse.success(submissionService.caseResults(id, page, size, onlyFailed));
+    }
+
+    @GetMapping("/{id}/ai-explain")
+    public ApiResponse<AiCodeExplainVo> explain(@PathVariable("id") Long id) {
+        return ApiResponse.success(submissionService.explainCode(id));
     }
 }

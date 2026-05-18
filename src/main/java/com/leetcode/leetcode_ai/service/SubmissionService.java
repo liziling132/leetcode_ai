@@ -9,6 +9,7 @@ import com.leetcode.leetcode_ai.vo.RunTestResponseVo;
 import com.leetcode.leetcode_ai.vo.SubmissionDetailResponseVo;
 import com.leetcode.leetcode_ai.vo.SubmissionPageVo;
 import com.leetcode.leetcode_ai.vo.SubmissionVersionPageVo;
+import com.leetcode.leetcode_ai.vo.AiCodeExplainVo;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface SubmissionService {
     SubmissionDetailResponseVo detail(Long submissionId);
 
     SubmissionCaseResultPageVo caseResults(Long submissionId, int page, int size, boolean onlyFailed);
+
+    AiCodeExplainVo explainCode(Long submissionId);
 }

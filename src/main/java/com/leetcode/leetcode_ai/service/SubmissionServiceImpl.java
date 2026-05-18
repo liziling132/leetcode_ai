@@ -12,6 +12,7 @@ import com.leetcode.leetcode_ai.dto.CreateSubmissionRequestDto;
 import com.leetcode.leetcode_ai.dto.RunTestRequestDto;
 import com.leetcode.leetcode_ai.vo.CreateSubmissionResponseVo;
 import com.leetcode.leetcode_ai.vo.RunTestResponseVo;
+import com.leetcode.leetcode_ai.vo.AiCodeExplainVo;
 import com.leetcode.leetcode_ai.vo.SubmissionCaseResultItemVo;
 import com.leetcode.leetcode_ai.vo.SubmissionCaseResultPageVo;
 import com.leetcode.leetcode_ai.vo.SubmissionDetailResponseVo;
@@ -69,6 +70,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final ObjectMapper objectMapper;
     private final JudgeQueueService judgeQueueService;
     private final SubmissionCaseResultMapper submissionCaseResultMapper;
+    private final AiTextService aiTextService;
 
     @Override
     @Transactional
@@ -245,6 +247,34 @@ public class SubmissionServiceImpl implements SubmissionService {
         List<SubmissionCaseResultEntity> rows = submissionCaseResultMapper.findPageBySubmissionId(submissionId, onlyFailed, offset, size);
         List<SubmissionCaseResultItemVo> list = rows.stream().map(this::toCaseResultItem).toList();
         return new SubmissionCaseResultPageVo(total, page, size, list);
+    }
+
+    @Override
+    public AiCodeExplainVo explainCode(Long submissionId) {
+        SubmissionEntity submissionEntity = submissionMapper.findById(submissionId);
+        if (submissionEntity == null) {
+            throw new BizException(404, "Submission not found");
+        }
+        if (!submissionEntity.getUserId().equals(currentUserId())) {
+            throw new BizException(403, "Forbidden");
+        }
+        ProblemEntity problemEntity = problemMapper.findOnlineById(submissionEntity.getProblemId());
+        String problemTitle = problemEntity == null ? "Unknown Problem" : problemEntity.getTitle();
+
+        AiTextResult aiResult = aiTextService.explainCode(
+                problemTitle,
+                submissionEntity.getLanguage(),
+                trimText(submissionEntity.getCodeContent(), 1200),
+                submissionEntity.getJudgeStatus()
+        );
+        if (aiResult != null && StringUtils.hasText(aiResult.content())) {
+            return new AiCodeExplainVo(submissionId, aiResult.content(), aiResult.source(), aiResult.model());
+        }
+        String fallback = "解题思路：先明确输入输出并构造主流程。\n"
+                + "关键步骤：按题意逐步处理数据，注意边界条件和空输入。\n"
+                + "时间复杂度：通常与主要循环层数相关，请结合代码循环结构评估。\n"
+                + "空间复杂度：主要来自额外数据结构与递归栈。";
+        return new AiCodeExplainVo(submissionId, fallback, "RULE", null);
     }
 
     private SubmissionCaseResultItemVo toCaseResultItem(SubmissionCaseResultEntity row) {

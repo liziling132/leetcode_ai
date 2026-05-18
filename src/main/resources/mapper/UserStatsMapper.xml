@@ -17,6 +17,12 @@
           and judge_status = 'ACCEPTED'
     </select>
 
+    <select id="countWrongQuestions" resultType="long">
+        select coalesce(sum(wrong_count), 0)
+        from wrong_questions
+        where user_id = #{userId}
+    </select>
+
     <select id="submissionTrendLastDays" resultType="com.leetcode.leetcode_ai.mapper.row.SubmissionTrendRow">
         select date(submitted_at) as day,
                count(1) as submissions

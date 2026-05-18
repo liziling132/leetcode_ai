@@ -12,6 +12,8 @@ public interface UserStatsMapper {
 
     long countAcceptedSubmissions(@Param("userId") Long userId);
 
+    long countWrongQuestions(@Param("userId") Long userId);
+
     List<SubmissionTrendRow> submissionTrendLastDays(@Param("userId") Long userId,
                                                      @Param("days") int days);
 
