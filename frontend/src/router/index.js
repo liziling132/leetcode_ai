@@ -15,7 +15,6 @@ const routes = [
     { path: '/admin/users', component: () => import('@/views/admin/AdminUsersView.vue') },
     { path: '/admin/problems', component: () => import('@/views/admin/AdminProblemsView.vue') },
     { path: '/admin/tags', component: () => import('@/views/admin/AdminTagsView.vue') },
-    { path: '/admin/resources', component: () => import('@/views/admin/AdminResourcesView.vue') },
     { path: '/admin/monitor', component: () => import('@/views/admin/AdminMonitorView.vue') }
 ];
 const router = createRouter({

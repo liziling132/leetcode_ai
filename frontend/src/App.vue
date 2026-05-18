@@ -18,7 +18,6 @@
           <el-menu-item index="/admin/users">用户管理</el-menu-item>
           <el-menu-item index="/admin/problems">题目管理</el-menu-item>
           <el-menu-item index="/admin/tags">标签管理</el-menu-item>
-          <el-menu-item index="/admin/resources">资源管理</el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-aside>

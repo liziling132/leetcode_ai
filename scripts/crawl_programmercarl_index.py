@@ -26,6 +26,14 @@ from dataclasses import dataclass
 BASE = "https://www.programmercarl.com/"
 DEFAULT_OUT = "docs/sql/seed_programmercarl_index.sql"
 
+BLOCKED_PATH_PREFIXES = (
+    "/about",
+    "/ke",
+    "/other",
+    "/xunlian",
+    "/qita",
+)
+
 KEYWORD_MAP = {
     "数组": "array",
     "哈希": "hash",
@@ -46,6 +54,7 @@ KEYWORD_MAP = {
 
 LINK_RE = re.compile(r"<a\s+[^>]*href=[\"']([^\"']+)[\"'][^>]*>(.*?)</a>", re.IGNORECASE | re.DOTALL)
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE | re.DOTALL)
+LOC_RE = re.compile(r"<loc>(.*?)</loc>", re.IGNORECASE | re.DOTALL)
 TAG_RE = re.compile(r"<[^>]+>")
 WS_RE = re.compile(r"\s+")
 
@@ -87,6 +96,61 @@ def normalize(url: str) -> str:
     return urllib.parse.urlunparse((p.scheme, p.netloc, path, "", "", ""))
 
 
+def is_algo_page(url: str) -> bool:
+    p = urllib.parse.urlparse(url)
+    path = p.path or "/"
+    if not path.endswith(".html"):
+        return False
+    for prefix in BLOCKED_PATH_PREFIXES:
+        if path.startswith(prefix):
+            return False
+    # 只保留根路径下的 .html 文档页（例如 /数组理论基础.html、/27.移除元素.html）
+    # 排除多级目录内容页。
+    if path.count("/") != 1:
+        return False
+    return True
+
+
+def fetch_sitemap_urls() -> list[str]:
+    candidates = [
+        "https://www.programmercarl.com/sitemap.xml",
+        "https://www.programmercarl.com/sitemap_index.xml",
+    ]
+    urls: list[str] = []
+    for sm in candidates:
+        try:
+            xml = fetch(sm)
+        except Exception:
+            continue
+        for loc in LOC_RE.findall(xml):
+            u = normalize(clean_text(loc))
+            if same_site(u):
+                urls.append(u)
+
+    # sitemap_index 里可能还是 sitemap 链接，再展开一层
+    expanded: list[str] = []
+    for u in urls:
+        if "sitemap" not in u:
+            expanded.append(u)
+            continue
+        try:
+            xml = fetch(u)
+        except Exception:
+            continue
+        sub = [normalize(clean_text(x)) for x in LOC_RE.findall(xml)]
+        if sub:
+            expanded.extend(sub)
+        else:
+            expanded.append(u)
+    uniq = []
+    seen = set()
+    for u in expanded:
+        if u not in seen:
+            seen.add(u)
+            uniq.append(u)
+    return uniq
+
+
 def kp_json_from_title(title: str) -> str:
     tags = [v for k, v in KEYWORD_MAP.items() if k in title]
     if not tags:
@@ -104,6 +168,25 @@ def escape_sql(s: str) -> str:
 
 
 def crawl(max_pages: int) -> list[Resource]:
+    sitemap_urls = fetch_sitemap_urls()
+    if sitemap_urls:
+        resources: dict[str, Resource] = {}
+        for raw in sitemap_urls:
+            u = normalize(raw)
+            if not is_algo_page(u):
+                continue
+            title = ""
+            try:
+                doc = fetch(u)
+                m = TITLE_RE.search(doc)
+                title = clean_text(m.group(1)) if m else ""
+            except Exception:
+                pass
+            if not title:
+                title = urllib.parse.unquote(urllib.parse.urlparse(u).path.rsplit("/", 1)[-1].replace(".html", ""))
+            resources[u] = Resource(title=title, url=u, kp_json=kp_json_from_title(title))
+        return [r for _, r in sorted(resources.items(), key=lambda kv: kv[0])]
+
     q = deque([BASE])
     visited: set[str] = set()
     resources: dict[str, Resource] = {}
@@ -134,12 +217,12 @@ def crawl(max_pages: int) -> list[Resource]:
                 q.append(abs_url)
 
             anchor_text = clean_text(inner)
-            if len(anchor_text) >= 2 and abs_url not in resources:
+            if len(anchor_text) >= 2 and abs_url not in resources and is_algo_page(abs_url):
                 resources[abs_url] = Resource(title=anchor_text, url=abs_url, kp_json=kp_json_from_title(anchor_text))
 
     items = [r for _, r in sorted(resources.items(), key=lambda kv: kv[0])]
     # 过滤太短的标题和无意义入口页
-    items = [x for x in items if len(x.title) >= 2 and x.url.startswith(BASE)]
+    items = [x for x in items if len(x.title) >= 2 and x.url.startswith(BASE) and is_algo_page(x.url)]
     return items
 
 
