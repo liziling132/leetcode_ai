@@ -16,11 +16,11 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class, ConstraintViolationException.class, HttpMessageNotReadableException.class})
     public ApiResponse<Void> handleBadRequest(Exception ex) {
-        return ApiResponse.fail(400, "???????");
+        return ApiResponse.fail(400, "请求参数错误");
     }
     @ExceptionHandler(Exception.class)
     public ApiResponse<Void> handleUnexpected(Exception ex) {
         log.error("Unhandled exception", ex);
-        return ApiResponse.fail(500, "??????");
+        return ApiResponse.fail(500, "服务器内部错误");
     }
 }
