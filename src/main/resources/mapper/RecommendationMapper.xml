@@ -8,6 +8,18 @@
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="difficulty" column="difficulty"/>
+        <result property="knowledgePoints" column="knowledge_points"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <resultMap id="resourceResultMap" type="com.leetcode.leetcode_ai.entity.AdminResourceEntity">
+        <id property="id" column="id"/>
+        <result property="resourceType" column="resource_type"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="knowledgePoints" column="knowledge_points"/>
         <result property="status" column="status"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
@@ -35,7 +47,7 @@
     </select>
 
     <select id="findCandidatesByTags" resultMap="problemResultMap">
-        select p.id, p.title, p.difficulty, p.status, p.created_at, p.updated_at, p.accepted_count
+        select p.id, p.title, p.difficulty, p.knowledge_points, p.status, p.created_at, p.updated_at, p.accepted_count
         from problems p
                  join problem_tags pt on pt.problem_id = p.id
         where p.status = 1
@@ -58,7 +70,7 @@
     </select>
 
     <select id="findCandidatesByDifficulty" resultMap="problemResultMap">
-        select p.id, p.title, p.difficulty, p.status, p.created_at, p.updated_at
+        select p.id, p.title, p.difficulty, p.knowledge_points, p.status, p.created_at, p.updated_at
         from problems p
         where p.status = 1
           and p.difficulty = #{difficulty}
@@ -83,6 +95,16 @@
             #{userId}, #{triggerSource}, #{triggerRefId}, #{resourceType}, #{resourceId}, #{problemId}, #{reasonText}, #{aiSource}, #{aiModel}, #{score}, now()
         )
     </insert>
+
+    <select id="findBestResourceByKnowledgePoints" resultMap="resourceResultMap">
+        select id, resource_type, title, url, knowledge_points, status, created_at, updated_at
+        from admin_resources
+        where status = 1
+          and #{knowledgePointsJson} is not null
+          and json_overlaps(knowledge_points, cast(#{knowledgePointsJson} as json))
+        order by updated_at desc, id desc
+        limit 1
+    </select>
 
     <select id="countRecordsByUserId" resultType="long">
         select count(1)

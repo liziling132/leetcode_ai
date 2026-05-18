@@ -1,6 +1,7 @@
 package com.leetcode.leetcode_ai.mapper;
 
 import com.leetcode.leetcode_ai.entity.ProblemEntity;
+import com.leetcode.leetcode_ai.entity.AdminResourceEntity;
 import com.leetcode.leetcode_ai.mapper.row.WrongSeedRow;
 import com.leetcode.leetcode_ai.vo.RecommendationRecordItemVo;
 import org.apache.ibatis.annotations.Param;
@@ -35,6 +36,8 @@ public interface RecommendationMapper {
                                    @Param("aiSource") String aiSource,
                                    @Param("aiModel") String aiModel,
                                    @Param("score") BigDecimal score);
+
+    AdminResourceEntity findBestResourceByKnowledgePoints(@Param("knowledgePointsJson") String knowledgePointsJson);
 
     long countRecordsByUserId(@Param("userId") Long userId);
 

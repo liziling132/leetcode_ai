@@ -1,6 +1,7 @@
 package com.leetcode.leetcode_ai.service;
 
 import com.leetcode.leetcode_ai.common.exception.BizException;
+import com.leetcode.leetcode_ai.entity.AdminResourceEntity;
 import com.leetcode.leetcode_ai.entity.ProblemEntity;
 import com.leetcode.leetcode_ai.vo.RecommendationItemResponseVo;
 import com.leetcode.leetcode_ai.vo.RecommendationRecordPageVo;
@@ -108,13 +109,14 @@ public class RecommendationServiceImpl implements RecommendationService {
             String wrongContext = buildWrongContext(seeds);
             ReasonPayload reasonPayload = buildReason(wrongContext, ProblemEntity.getTitle(), ProblemEntity.getDifficulty());
             Long refId = triggerProblemId == null ? seeds.get(0).getProblemId() : triggerProblemId;
+            AdminResourceEntity linkedResource = findLinkedResource(ProblemEntity.getKnowledgePoints());
 
             recommendationMapper.insertRecommendationRecord(
                     userId,
                     "WRONG_QUESTION",
                     refId,
-                    "PROBLEM",
-                    String.valueOf(ProblemEntity.getId()),
+                    linkedResource == null ? "PROBLEM" : linkedResource.getResourceType(),
+                    linkedResource == null ? String.valueOf(ProblemEntity.getId()) : String.valueOf(linkedResource.getId()),
                     ProblemEntity.getId(),
                     reasonPayload.reasonText(),
                     reasonPayload.aiSource(),
@@ -128,6 +130,11 @@ public class RecommendationServiceImpl implements RecommendationService {
             item.setDifficulty(ProblemEntity.getDifficulty());
             item.setReason(reasonPayload.reasonText());
             item.setScore(score.doubleValue());
+            if (linkedResource != null) {
+                item.setResourceType(linkedResource.getResourceType());
+                item.setResourceTitle(linkedResource.getTitle());
+                item.setResourceUrl(linkedResource.getUrl());
+            }
             result.add(item);
         }
         try {
@@ -162,6 +169,18 @@ public class RecommendationServiceImpl implements RecommendationService {
     private String trimToLength(String text, int maxLength) {
         String normalized = text.trim();
         return normalized.length() <= maxLength ? normalized : normalized.substring(0, maxLength);
+    }
+
+    private AdminResourceEntity findLinkedResource(String knowledgePointsJson) {
+        if (knowledgePointsJson == null || knowledgePointsJson.isBlank()) {
+            return null;
+        }
+        try {
+            return recommendationMapper.findBestResourceByKnowledgePoints(knowledgePointsJson);
+        } catch (Exception e) {
+            log.warn("Find linked resource failed, knowledgePoints={}", knowledgePointsJson, e);
+            return null;
+        }
     }
 
     private record ReasonPayload(String reasonText, String aiSource, String aiModel) {
